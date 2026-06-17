@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sample HTML page</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 640px; margin: 40px auto; color: #222; line-height: 1.6; }
+  h1 { color: #0969da; }
+  .box { border: 1px solid #d0d7de; border-radius: 8px; padding: 16px; background: #f6f8fa; }
+  code { background: #eaeef2; padding: 1px 5px; border-radius: 3px; }
+</style>
+</head>
+<body>
+  <h1>Sample HTML file</h1>
+  <p>This file exists to test the viewer's <strong>HTML path</strong>: it should
+     render inside a sandboxed <code>&lt;iframe&gt;</code> with its own styling,
+     and scripts disabled.</p>
+  <div class="box">
+    <p>This boxed, styled content proves the iframe uses the file's own CSS,
+       independent of the viewer's theme.</p>
+  </div>
+  <p>If the script below were allowed to run it would change this text — it must
+     <em>not</em>, because the iframe is sandboxed.</p>
+  <p id="probe">scripts are disabled ✅</p>
+  <script>document.getElementById('probe').textContent = 'scripts RAN ❌ (sandbox failed)';</script>
+</body>
+</html>

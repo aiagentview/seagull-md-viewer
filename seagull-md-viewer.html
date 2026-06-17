@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<!--
+  SeaGull MD Viewer — a single-file, dependency-light Markdown viewer.
+
+  MIT License
+
+  Copyright © 2026 Sea Gull Way Ventures Inc.
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+  ─────────────────────────────────────────────────────────────────────────────
+  THIRD-PARTY SOFTWARE
+
+  This viewer bundles (inlines) one third-party library so the file is fully
+  self-contained — it needs no network and makes no external requests:
+
+    • marked v12.0.2 — a Markdown parser — MIT License
+      Copyright (c) 2011-2024, Christopher Jeffrey and the MarkedJS contributors
+      https://github.com/markedjs/marked
+
+  marked is used under the MIT License and is inlined below as a script block
+  with its own license banner left intact (search for "marked v12.0.2"). Its
+  copyright notice is reproduced above and in THIRD-PARTY-NOTICES.md.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SeaGull MD Viewer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%90%A6</text></svg>">
+  <!-- marked v12.0.2 (Markdown parser) inlined below for a fully self-contained,
+       offline-capable file. MIT License — its banner is preserved at the top of the
+       inlined code. See THIRD-PARTY-NOTICES.md. -->
+  <script>
+/**
+ * marked v12.0.2 - a markdown parser
+ * Copyright (c) 2011-2024, Christopher Jeffrey. (MIT Licensed)
+ * https://github.com/markedjs/marked
+ */
+!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t((e="undefined"!=typeof globalThis?globalThis:e||self).marked={})}(this,(function(e){"use strict";function t(){return{async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null}}function n(t){e.defaults=t}e.defaults={async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null};const s=/[&<>"']/,r=new RegExp(s.source,"g"),i=/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/,l=new RegExp(i.source,"g"),o={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"},a=e=>o[e];function c(e,t){if(t){if(s.test(e))return e.replace(r,a)}else if(i.test(e))return e.replace(l,a);return e}const h=/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/gi;function p(e){return e.replace(h,((e,t)=>"colon"===(t=t.toLowerCase())?":":"#"===t.charAt(0)?"x"===t.charAt(1)?String.fromCharCode(parseInt(t.substring(2),16)):String.fromCharCode(+t.substring(1)):""))}const u=/(^|[^\[])\^/g;function k(e,t){let n="string"==typeof e?e:e.source;t=t||"";const s={replace:(e,t)=>{let r="string"==typeof t?t:t.source;return r=r.replace(u,"$1"),n=n.replace(e,r),s},getRegex:()=>new RegExp(n,t)};return s}function g(e){try{e=encodeURI(e).replace(/%25/g,"%")}catch(e){return null}return e}const f={exec:()=>null};function d(e,t){const n=e.replace(/\|/g,((e,t,n)=>{let s=!1,r=t;for(;--r>=0&&"\\"===n[r];)s=!s;return s?"|":" |"})).split(/ \|/);let s=0;if(n[0].trim()||n.shift(),n.length>0&&!n[n.length-1].trim()&&n.pop(),t)if(n.length>t)n.splice(t);else for(;n.length<t;)n.push("");for(;s<n.length;s++)n[s]=n[s].trim().replace(/\\\|/g,"|");return n}function x(e,t,n){const s=e.length;if(0===s)return"";let r=0;for(;r<s;){const i=e.charAt(s-r-1);if(i!==t||n){if(i===t||!n)break;r++}else r++}return e.slice(0,s-r)}function b(e,t,n,s){const r=t.href,i=t.title?c(t.title):null,l=e[1].replace(/\\([\[\]])/g,"$1");if("!"!==e[0].charAt(0)){s.state.inLink=!0;const e={type:"link",raw:n,href:r,title:i,text:l,tokens:s.inlineTokens(l)};return s.state.inLink=!1,e}return{type:"image",raw:n,href:r,title:i,text:c(l)}}class w{options;rules;lexer;constructor(t){this.options=t||e.defaults}space(e){const t=this.rules.block.newline.exec(e);if(t&&t[0].length>0)return{type:"space",raw:t[0]}}code(e){const t=this.rules.block.code.exec(e);if(t){const e=t[0].replace(/^ {1,4}/gm,"");return{type:"code",raw:t[0],codeBlockStyle:"indented",text:this.options.pedantic?e:x(e,"\n")}}}fences(e){const t=this.rules.block.fences.exec(e);if(t){const e=t[0],n=function(e,t){const n=e.match(/^(\s+)(?:```)/);if(null===n)return t;const s=n[1];return t.split("\n").map((e=>{const t=e.match(/^\s+/);if(null===t)return e;const[n]=t;return n.length>=s.length?e.slice(s.length):e})).join("\n")}(e,t[3]||"");return{type:"code",raw:e,lang:t[2]?t[2].trim().replace(this.rules.inline.anyPunctuation,"$1"):t[2],text:n}}}heading(e){const t=this.rules.block.heading.exec(e);if(t){let e=t[2].trim();if(/#$/.test(e)){const t=x(e,"#");this.options.pedantic?e=t.trim():t&&!/ $/.test(t)||(e=t.trim())}return{type:"heading",raw:t[0],depth:t[1].length,text:e,tokens:this.lexer.inline(e)}}}hr(e){const t=this.rules.block.hr.exec(e);if(t)return{type:"hr",raw:t[0]}}blockquote(e){const t=this.rules.block.blockquote.exec(e);if(t){let e=t[0].replace(/\n {0,3}((?:=+|-+) *)(?=\n|$)/g,"\n    $1");e=x(e.replace(/^ *>[ \t]?/gm,""),"\n");const n=this.lexer.state.top;this.lexer.state.top=!0;const s=this.lexer.blockTokens(e);return this.lexer.state.top=n,{type:"blockquote",raw:t[0],tokens:s,text:e}}}list(e){let t=this.rules.block.list.exec(e);if(t){let n=t[1].trim();const s=n.length>1,r={type:"list",raw:"",ordered:s,start:s?+n.slice(0,-1):"",loose:!1,items:[]};n=s?`\\d{1,9}\\${n.slice(-1)}`:`\\${n}`,this.options.pedantic&&(n=s?n:"[*+-]");const i=new RegExp(`^( {0,3}${n})((?:[\t ][^\\n]*)?(?:\\n|$))`);let l="",o="",a=!1;for(;e;){let n=!1;if(!(t=i.exec(e)))break;if(this.rules.block.hr.test(e))break;l=t[0],e=e.substring(l.length);let s=t[2].split("\n",1)[0].replace(/^\t+/,(e=>" ".repeat(3*e.length))),c=e.split("\n",1)[0],h=0;this.options.pedantic?(h=2,o=s.trimStart()):(h=t[2].search(/[^ ]/),h=h>4?1:h,o=s.slice(h),h+=t[1].length);let p=!1;if(!s&&/^ *$/.test(c)&&(l+=c+"\n",e=e.substring(c.length+1),n=!0),!n){const t=new RegExp(`^ {0,${Math.min(3,h-1)}}(?:[*+-]|\\d{1,9}[.)])((?:[ \t][^\\n]*)?(?:\\n|$))`),n=new RegExp(`^ {0,${Math.min(3,h-1)}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`),r=new RegExp(`^ {0,${Math.min(3,h-1)}}(?:\`\`\`|~~~)`),i=new RegExp(`^ {0,${Math.min(3,h-1)}}#`);for(;e;){const a=e.split("\n",1)[0];if(c=a,this.options.pedantic&&(c=c.replace(/^ {1,4}(?=( {4})*[^ ])/g,"  ")),r.test(c))break;if(i.test(c))break;if(t.test(c))break;if(n.test(e))break;if(c.search(/[^ ]/)>=h||!c.trim())o+="\n"+c.slice(h);else{if(p)break;if(s.search(/[^ ]/)>=4)break;if(r.test(s))break;if(i.test(s))break;if(n.test(s))break;o+="\n"+c}p||c.trim()||(p=!0),l+=a+"\n",e=e.substring(a.length+1),s=c.slice(h)}}r.loose||(a?r.loose=!0:/\n *\n *$/.test(l)&&(a=!0));let u,k=null;this.options.gfm&&(k=/^\[[ xX]\] /.exec(o),k&&(u="[ ] "!==k[0],o=o.replace(/^\[[ xX]\] +/,""))),r.items.push({type:"list_item",raw:l,task:!!k,checked:u,loose:!1,text:o,tokens:[]}),r.raw+=l}r.items[r.items.length-1].raw=l.trimEnd(),r.items[r.items.length-1].text=o.trimEnd(),r.raw=r.raw.trimEnd();for(let e=0;e<r.items.length;e++)if(this.lexer.state.top=!1,r.items[e].tokens=this.lexer.blockTokens(r.items[e].text,[]),!r.loose){const t=r.items[e].tokens.filter((e=>"space"===e.type)),n=t.length>0&&t.some((e=>/\n.*\n/.test(e.raw)));r.loose=n}if(r.loose)for(let e=0;e<r.items.length;e++)r.items[e].loose=!0;return r}}html(e){const t=this.rules.block.html.exec(e);if(t){return{type:"html",block:!0,raw:t[0],pre:"pre"===t[1]||"script"===t[1]||"style"===t[1],text:t[0]}}}def(e){const t=this.rules.block.def.exec(e);if(t){const e=t[1].toLowerCase().replace(/\s+/g," "),n=t[2]?t[2].replace(/^<(.*)>$/,"$1").replace(this.rules.inline.anyPunctuation,"$1"):"",s=t[3]?t[3].substring(1,t[3].length-1).replace(this.rules.inline.anyPunctuation,"$1"):t[3];return{type:"def",tag:e,raw:t[0],href:n,title:s}}}table(e){const t=this.rules.block.table.exec(e);if(!t)return;if(!/[:|]/.test(t[2]))return;const n=d(t[1]),s=t[2].replace(/^\||\| *$/g,"").split("|"),r=t[3]&&t[3].trim()?t[3].replace(/\n[ \t]*$/,"").split("\n"):[],i={type:"table",raw:t[0],header:[],align:[],rows:[]};if(n.length===s.length){for(const e of s)/^ *-+: *$/.test(e)?i.align.push("right"):/^ *:-+: *$/.test(e)?i.align.push("center"):/^ *:-+ *$/.test(e)?i.align.push("left"):i.align.push(null);for(const e of n)i.header.push({text:e,tokens:this.lexer.inline(e)});for(const e of r)i.rows.push(d(e,i.header.length).map((e=>({text:e,tokens:this.lexer.inline(e)}))));return i}}lheading(e){const t=this.rules.block.lheading.exec(e);if(t)return{type:"heading",raw:t[0],depth:"="===t[2].charAt(0)?1:2,text:t[1],tokens:this.lexer.inline(t[1])}}paragraph(e){const t=this.rules.block.paragraph.exec(e);if(t){const e="\n"===t[1].charAt(t[1].length-1)?t[1].slice(0,-1):t[1];return{type:"paragraph",raw:t[0],text:e,tokens:this.lexer.inline(e)}}}text(e){const t=this.rules.block.text.exec(e);if(t)return{type:"text",raw:t[0],text:t[0],tokens:this.lexer.inline(t[0])}}escape(e){const t=this.rules.inline.escape.exec(e);if(t)return{type:"escape",raw:t[0],text:c(t[1])}}tag(e){const t=this.rules.inline.tag.exec(e);if(t)return!this.lexer.state.inLink&&/^<a /i.test(t[0])?this.lexer.state.inLink=!0:this.lexer.state.inLink&&/^<\/a>/i.test(t[0])&&(this.lexer.state.inLink=!1),!this.lexer.state.inRawBlock&&/^<(pre|code|kbd|script)(\s|>)/i.test(t[0])?this.lexer.state.inRawBlock=!0:this.lexer.state.inRawBlock&&/^<\/(pre|code|kbd|script)(\s|>)/i.test(t[0])&&(this.lexer.state.inRawBlock=!1),{type:"html",raw:t[0],inLink:this.lexer.state.inLink,inRawBlock:this.lexer.state.inRawBlock,block:!1,text:t[0]}}link(e){const t=this.rules.inline.link.exec(e);if(t){const e=t[2].trim();if(!this.options.pedantic&&/^</.test(e)){if(!/>$/.test(e))return;const t=x(e.slice(0,-1),"\\");if((e.length-t.length)%2==0)return}else{const e=function(e,t){if(-1===e.indexOf(t[1]))return-1;let n=0;for(let s=0;s<e.length;s++)if("\\"===e[s])s++;else if(e[s]===t[0])n++;else if(e[s]===t[1]&&(n--,n<0))return s;return-1}(t[2],"()");if(e>-1){const n=(0===t[0].indexOf("!")?5:4)+t[1].length+e;t[2]=t[2].substring(0,e),t[0]=t[0].substring(0,n).trim(),t[3]=""}}let n=t[2],s="";if(this.options.pedantic){const e=/^([^'"]*[^\s])\s+(['"])(.*)\2/.exec(n);e&&(n=e[1],s=e[3])}else s=t[3]?t[3].slice(1,-1):"";return n=n.trim(),/^</.test(n)&&(n=this.options.pedantic&&!/>$/.test(e)?n.slice(1):n.slice(1,-1)),b(t,{href:n?n.replace(this.rules.inline.anyPunctuation,"$1"):n,title:s?s.replace(this.rules.inline.anyPunctuation,"$1"):s},t[0],this.lexer)}}reflink(e,t){let n;if((n=this.rules.inline.reflink.exec(e))||(n=this.rules.inline.nolink.exec(e))){const e=t[(n[2]||n[1]).replace(/\s+/g," ").toLowerCase()];if(!e){const e=n[0].charAt(0);return{type:"text",raw:e,text:e}}return b(n,e,n[0],this.lexer)}}emStrong(e,t,n=""){let s=this.rules.inline.emStrongLDelim.exec(e);if(!s)return;if(s[3]&&n.match(/[\p{L}\p{N}]/u))return;if(!(s[1]||s[2]||"")||!n||this.rules.inline.punctuation.exec(n)){const n=[...s[0]].length-1;let r,i,l=n,o=0;const a="*"===s[0][0]?this.rules.inline.emStrongRDelimAst:this.rules.inline.emStrongRDelimUnd;for(a.lastIndex=0,t=t.slice(-1*e.length+n);null!=(s=a.exec(t));){if(r=s[1]||s[2]||s[3]||s[4]||s[5]||s[6],!r)continue;if(i=[...r].length,s[3]||s[4]){l+=i;continue}if((s[5]||s[6])&&n%3&&!((n+i)%3)){o+=i;continue}if(l-=i,l>0)continue;i=Math.min(i,i+l+o);const t=[...s[0]][0].length,a=e.slice(0,n+s.index+t+i);if(Math.min(n,i)%2){const e=a.slice(1,-1);return{type:"em",raw:a,text:e,tokens:this.lexer.inlineTokens(e)}}const c=a.slice(2,-2);return{type:"strong",raw:a,text:c,tokens:this.lexer.inlineTokens(c)}}}}codespan(e){const t=this.rules.inline.code.exec(e);if(t){let e=t[2].replace(/\n/g," ");const n=/[^ ]/.test(e),s=/^ /.test(e)&&/ $/.test(e);return n&&s&&(e=e.substring(1,e.length-1)),e=c(e,!0),{type:"codespan",raw:t[0],text:e}}}br(e){const t=this.rules.inline.br.exec(e);if(t)return{type:"br",raw:t[0]}}del(e){const t=this.rules.inline.del.exec(e);if(t)return{type:"del",raw:t[0],text:t[2],tokens:this.lexer.inlineTokens(t[2])}}autolink(e){const t=this.rules.inline.autolink.exec(e);if(t){let e,n;return"@"===t[2]?(e=c(t[1]),n="mailto:"+e):(e=c(t[1]),n=e),{type:"link",raw:t[0],text:e,href:n,tokens:[{type:"text",raw:e,text:e}]}}}url(e){let t;if(t=this.rules.inline.url.exec(e)){let e,n;if("@"===t[2])e=c(t[0]),n="mailto:"+e;else{let s;do{s=t[0],t[0]=this.rules.inline._backpedal.exec(t[0])?.[0]??""}while(s!==t[0]);e=c(t[0]),n="www."===t[1]?"http://"+t[0]:t[0]}return{type:"link",raw:t[0],text:e,href:n,tokens:[{type:"text",raw:e,text:e}]}}}inlineText(e){const t=this.rules.inline.text.exec(e);if(t){let e;return e=this.lexer.state.inRawBlock?t[0]:c(t[0]),{type:"text",raw:t[0],text:e}}}}const m=/^ {0,3}((?:-[\t ]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})(?:\n+|$)/,y=/(?:[*+-]|\d{1,9}[.)])/,$=k(/^(?!bull |blockCode|fences|blockquote|heading|html)((?:.|\n(?!\s*?\n|bull |blockCode|fences|blockquote|heading|html))+?)\n {0,3}(=+|-+) *(?:\n+|$)/).replace(/bull/g,y).replace(/blockCode/g,/ {4}/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).getRegex(),z=/^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html|table| +\n)[^\n]+)*)/,T=/(?!\s*\])(?:\\.|[^\[\]\\])+/,R=k(/^ {0,3}\[(label)\]: *(?:\n *)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n *)?| *\n *)(title))? *(?:\n+|$)/).replace("label",T).replace("title",/(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex(),_=k(/^( {0,3}bull)([ \t][^\n]+?)?(?:\n|$)/).replace(/bull/g,y).getRegex(),A="address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul",S=/<!--(?:-?>|[\s\S]*?(?:-->|$))/,I=k("^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>\\n*|$)|<![A-Z][\\s\\S]*?(?:>\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n *)+\\n|$)|<(?!script|pre|style|textarea)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n *)+\\n|$)|</(?!script|pre|style|textarea)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n *)+\\n|$))","i").replace("comment",S).replace("tag",A).replace("attribute",/ +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex(),E=k(z).replace("hr",m).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("|table","").replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",A).getRegex(),q={blockquote:k(/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/).replace("paragraph",E).getRegex(),code:/^( {4}[^\n]+(?:\n(?: *(?:\n|$))*)?)+/,def:R,fences:/^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/,heading:/^ {0,3}(#{1,6})(?=\s|$)(.*)(?:\n+|$)/,hr:m,html:I,lheading:$,list:_,newline:/^(?: *(?:\n|$))+/,paragraph:E,table:f,text:/^[^\n]+/},Z=k("^ *([^\\n ].*)\\n {0,3}((?:\\| *)?:?-+:? *(?:\\| *:?-+:? *)*(?:\\| *)?)(?:\\n((?:(?! *\\n|hr|heading|blockquote|code|fences|list|html).*(?:\\n|$))*)\\n*|$)").replace("hr",m).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("blockquote"," {0,3}>").replace("code"," {4}[^\\n]").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",A).getRegex(),L={...q,table:Z,paragraph:k(z).replace("hr",m).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("table",Z).replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",A).getRegex()},P={...q,html:k("^ *(?:comment *(?:\\n|\\s*$)|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)|<tag(?:\"[^\"]*\"|'[^']*'|\\s[^'\"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))").replace("comment",S).replace(/tag/g,"(?!(?:a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)\\b)\\w+(?!:|[^\\w\\s@]*@)\\b").getRegex(),def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/,heading:/^(#{1,6})(.*)(?:\n+|$)/,fences:f,lheading:/^(.+?)\n {0,3}(=+|-+) *(?:\n+|$)/,paragraph:k(z).replace("hr",m).replace("heading"," *#{1,6} *[^\n]").replace("lheading",$).replace("|table","").replace("blockquote"," {0,3}>").replace("|fences","").replace("|list","").replace("|html","").replace("|tag","").getRegex()},Q=/^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,v=/^( {2,}|\\)\n(?!\s*$)/,B="\\p{P}\\p{S}",C=k(/^((?![*_])[\spunctuation])/,"u").replace(/punctuation/g,B).getRegex(),M=k(/^(?:\*+(?:((?!\*)[punct])|[^\s*]))|^_+(?:((?!_)[punct])|([^\s_]))/,"u").replace(/punct/g,B).getRegex(),O=k("^[^_*]*?__[^_*]*?\\*[^_*]*?(?=__)|[^*]+(?=[^*])|(?!\\*)[punct](\\*+)(?=[\\s]|$)|[^punct\\s](\\*+)(?!\\*)(?=[punct\\s]|$)|(?!\\*)[punct\\s](\\*+)(?=[^punct\\s])|[\\s](\\*+)(?!\\*)(?=[punct])|(?!\\*)[punct](\\*+)(?!\\*)(?=[punct])|[^punct\\s](\\*+)(?=[^punct\\s])","gu").replace(/punct/g,B).getRegex(),D=k("^[^_*]*?\\*\\*[^_*]*?_[^_*]*?(?=\\*\\*)|[^_]+(?=[^_])|(?!_)[punct](_+)(?=[\\s]|$)|[^punct\\s](_+)(?!_)(?=[punct\\s]|$)|(?!_)[punct\\s](_+)(?=[^punct\\s])|[\\s](_+)(?!_)(?=[punct])|(?!_)[punct](_+)(?!_)(?=[punct])","gu").replace(/punct/g,B).getRegex(),j=k(/\\([punct])/,"gu").replace(/punct/g,B).getRegex(),H=k(/^<(scheme:[^\s\x00-\x1f<>]*|email)>/).replace("scheme",/[a-zA-Z][a-zA-Z0-9+.-]{1,31}/).replace("email",/[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/).getRegex(),U=k(S).replace("(?:--\x3e|$)","--\x3e").getRegex(),X=k("^comment|^</[a-zA-Z][\\w:-]*\\s*>|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>|^<\\?[\\s\\S]*?\\?>|^<![a-zA-Z]+\\s[\\s\\S]*?>|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>").replace("comment",U).replace("attribute",/\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/).getRegex(),F=/(?:\[(?:\\.|[^\[\]\\])*\]|\\.|`[^`]*`|[^\[\]\\`])*?/,N=k(/^!?\[(label)\]\(\s*(href)(?:\s+(title))?\s*\)/).replace("label",F).replace("href",/<(?:\\.|[^\n<>\\])+>|[^\s\x00-\x1f]*/).replace("title",/"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/).getRegex(),G=k(/^!?\[(label)\]\[(ref)\]/).replace("label",F).replace("ref",T).getRegex(),J=k(/^!?\[(ref)\](?:\[\])?/).replace("ref",T).getRegex(),K={_backpedal:f,anyPunctuation:j,autolink:H,blockSkip:/\[[^[\]]*?\]\([^\(\)]*?\)|`[^`]*?`|<[^<>]*?>/g,br:v,code:/^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,del:f,emStrongLDelim:M,emStrongRDelimAst:O,emStrongRDelimUnd:D,escape:Q,link:N,nolink:J,punctuation:C,reflink:G,reflinkSearch:k("reflink|nolink(?!\\()","g").replace("reflink",G).replace("nolink",J).getRegex(),tag:X,text:/^(`+|[^`])(?:(?= {2,}\n)|[\s\S]*?(?:(?=[\\<!\[`*_]|\b_|$)|[^ ](?= {2,}\n)))/,url:f},V={...K,link:k(/^!?\[(label)\]\((.*?)\)/).replace("label",F).getRegex(),reflink:k(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label",F).getRegex()},W={...K,escape:k(Q).replace("])","~|])").getRegex(),url:k(/^((?:ftp|https?):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/,"i").replace("email",/[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/).getRegex(),_backpedal:/(?:[^?!.,:;*_'"~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_'"~)]+(?!$))+/,del:/^(~~?)(?=[^\s~])([\s\S]*?[^\s~])\1(?=[^~]|$)/,text:/^([`~]+|[^`~])(?:(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/},Y={...W,br:k(v).replace("{2,}","*").getRegex(),text:k(W.text).replace("\\b_","\\b_| {2,}\\n").replace(/\{2,\}/g,"*").getRegex()},ee={normal:q,gfm:L,pedantic:P},te={normal:K,gfm:W,breaks:Y,pedantic:V};class ne{tokens;options;state;tokenizer;inlineQueue;constructor(t){this.tokens=[],this.tokens.links=Object.create(null),this.options=t||e.defaults,this.options.tokenizer=this.options.tokenizer||new w,this.tokenizer=this.options.tokenizer,this.tokenizer.options=this.options,this.tokenizer.lexer=this,this.inlineQueue=[],this.state={inLink:!1,inRawBlock:!1,top:!0};const n={block:ee.normal,inline:te.normal};this.options.pedantic?(n.block=ee.pedantic,n.inline=te.pedantic):this.options.gfm&&(n.block=ee.gfm,this.options.breaks?n.inline=te.breaks:n.inline=te.gfm),this.tokenizer.rules=n}static get rules(){return{block:ee,inline:te}}static lex(e,t){return new ne(t).lex(e)}static lexInline(e,t){return new ne(t).inlineTokens(e)}lex(e){e=e.replace(/\r\n|\r/g,"\n"),this.blockTokens(e,this.tokens);for(let e=0;e<this.inlineQueue.length;e++){const t=this.inlineQueue[e];this.inlineTokens(t.src,t.tokens)}return this.inlineQueue=[],this.tokens}blockTokens(e,t=[]){let n,s,r,i;for(e=this.options.pedantic?e.replace(/\t/g,"    ").replace(/^ +$/gm,""):e.replace(/^( *)(\t+)/gm,((e,t,n)=>t+"    ".repeat(n.length)));e;)if(!(this.options.extensions&&this.options.extensions.block&&this.options.extensions.block.some((s=>!!(n=s.call({lexer:this},e,t))&&(e=e.substring(n.raw.length),t.push(n),!0)))))if(n=this.tokenizer.space(e))e=e.substring(n.raw.length),1===n.raw.length&&t.length>0?t[t.length-1].raw+="\n":t.push(n);else if(n=this.tokenizer.code(e))e=e.substring(n.raw.length),s=t[t.length-1],!s||"paragraph"!==s.type&&"text"!==s.type?t.push(n):(s.raw+="\n"+n.raw,s.text+="\n"+n.text,this.inlineQueue[this.inlineQueue.length-1].src=s.text);else if(n=this.tokenizer.fences(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.heading(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.hr(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.blockquote(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.list(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.html(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.def(e))e=e.substring(n.raw.length),s=t[t.length-1],!s||"paragraph"!==s.type&&"text"!==s.type?this.tokens.links[n.tag]||(this.tokens.links[n.tag]={href:n.href,title:n.title}):(s.raw+="\n"+n.raw,s.text+="\n"+n.raw,this.inlineQueue[this.inlineQueue.length-1].src=s.text);else if(n=this.tokenizer.table(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.lheading(e))e=e.substring(n.raw.length),t.push(n);else{if(r=e,this.options.extensions&&this.options.extensions.startBlock){let t=1/0;const n=e.slice(1);let s;this.options.extensions.startBlock.forEach((e=>{s=e.call({lexer:this},n),"number"==typeof s&&s>=0&&(t=Math.min(t,s))})),t<1/0&&t>=0&&(r=e.substring(0,t+1))}if(this.state.top&&(n=this.tokenizer.paragraph(r)))s=t[t.length-1],i&&"paragraph"===s.type?(s.raw+="\n"+n.raw,s.text+="\n"+n.text,this.inlineQueue.pop(),this.inlineQueue[this.inlineQueue.length-1].src=s.text):t.push(n),i=r.length!==e.length,e=e.substring(n.raw.length);else if(n=this.tokenizer.text(e))e=e.substring(n.raw.length),s=t[t.length-1],s&&"text"===s.type?(s.raw+="\n"+n.raw,s.text+="\n"+n.text,this.inlineQueue.pop(),this.inlineQueue[this.inlineQueue.length-1].src=s.text):t.push(n);else if(e){const t="Infinite loop on byte: "+e.charCodeAt(0);if(this.options.silent){console.error(t);break}throw new Error(t)}}return this.state.top=!0,t}inline(e,t=[]){return this.inlineQueue.push({src:e,tokens:t}),t}inlineTokens(e,t=[]){let n,s,r,i,l,o,a=e;if(this.tokens.links){const e=Object.keys(this.tokens.links);if(e.length>0)for(;null!=(i=this.tokenizer.rules.inline.reflinkSearch.exec(a));)e.includes(i[0].slice(i[0].lastIndexOf("[")+1,-1))&&(a=a.slice(0,i.index)+"["+"a".repeat(i[0].length-2)+"]"+a.slice(this.tokenizer.rules.inline.reflinkSearch.lastIndex))}for(;null!=(i=this.tokenizer.rules.inline.blockSkip.exec(a));)a=a.slice(0,i.index)+"["+"a".repeat(i[0].length-2)+"]"+a.slice(this.tokenizer.rules.inline.blockSkip.lastIndex);for(;null!=(i=this.tokenizer.rules.inline.anyPunctuation.exec(a));)a=a.slice(0,i.index)+"++"+a.slice(this.tokenizer.rules.inline.anyPunctuation.lastIndex);for(;e;)if(l||(o=""),l=!1,!(this.options.extensions&&this.options.extensions.inline&&this.options.extensions.inline.some((s=>!!(n=s.call({lexer:this},e,t))&&(e=e.substring(n.raw.length),t.push(n),!0)))))if(n=this.tokenizer.escape(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.tag(e))e=e.substring(n.raw.length),s=t[t.length-1],s&&"text"===n.type&&"text"===s.type?(s.raw+=n.raw,s.text+=n.text):t.push(n);else if(n=this.tokenizer.link(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.reflink(e,this.tokens.links))e=e.substring(n.raw.length),s=t[t.length-1],s&&"text"===n.type&&"text"===s.type?(s.raw+=n.raw,s.text+=n.text):t.push(n);else if(n=this.tokenizer.emStrong(e,a,o))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.codespan(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.br(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.del(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.autolink(e))e=e.substring(n.raw.length),t.push(n);else if(this.state.inLink||!(n=this.tokenizer.url(e))){if(r=e,this.options.extensions&&this.options.extensions.startInline){let t=1/0;const n=e.slice(1);let s;this.options.extensions.startInline.forEach((e=>{s=e.call({lexer:this},n),"number"==typeof s&&s>=0&&(t=Math.min(t,s))})),t<1/0&&t>=0&&(r=e.substring(0,t+1))}if(n=this.tokenizer.inlineText(r))e=e.substring(n.raw.length),"_"!==n.raw.slice(-1)&&(o=n.raw.slice(-1)),l=!0,s=t[t.length-1],s&&"text"===s.type?(s.raw+=n.raw,s.text+=n.text):t.push(n);else if(e){const t="Infinite loop on byte: "+e.charCodeAt(0);if(this.options.silent){console.error(t);break}throw new Error(t)}}else e=e.substring(n.raw.length),t.push(n);return t}}class se{options;constructor(t){this.options=t||e.defaults}code(e,t,n){const s=(t||"").match(/^\S*/)?.[0];return e=e.replace(/\n$/,"")+"\n",s?'<pre><code class="language-'+c(s)+'">'+(n?e:c(e,!0))+"</code></pre>\n":"<pre><code>"+(n?e:c(e,!0))+"</code></pre>\n"}blockquote(e){return`<blockquote>\n${e}</blockquote>\n`}html(e,t){return e}heading(e,t,n){return`<h${t}>${e}</h${t}>\n`}hr(){return"<hr>\n"}list(e,t,n){const s=t?"ol":"ul";return"<"+s+(t&&1!==n?' start="'+n+'"':"")+">\n"+e+"</"+s+">\n"}listitem(e,t,n){return`<li>${e}</li>\n`}checkbox(e){return"<input "+(e?'checked="" ':"")+'disabled="" type="checkbox">'}paragraph(e){return`<p>${e}</p>\n`}table(e,t){return t&&(t=`<tbody>${t}</tbody>`),"<table>\n<thead>\n"+e+"</thead>\n"+t+"</table>\n"}tablerow(e){return`<tr>\n${e}</tr>\n`}tablecell(e,t){const n=t.header?"th":"td";return(t.align?`<${n} align="${t.align}">`:`<${n}>`)+e+`</${n}>\n`}strong(e){return`<strong>${e}</strong>`}em(e){return`<em>${e}</em>`}codespan(e){return`<code>${e}</code>`}br(){return"<br>"}del(e){return`<del>${e}</del>`}link(e,t,n){const s=g(e);if(null===s)return n;let r='<a href="'+(e=s)+'"';return t&&(r+=' title="'+t+'"'),r+=">"+n+"</a>",r}image(e,t,n){const s=g(e);if(null===s)return n;let r=`<img src="${e=s}" alt="${n}"`;return t&&(r+=` title="${t}"`),r+=">",r}text(e){return e}}class re{strong(e){return e}em(e){return e}codespan(e){return e}del(e){return e}html(e){return e}text(e){return e}link(e,t,n){return""+n}image(e,t,n){return""+n}br(){return""}}class ie{options;renderer;textRenderer;constructor(t){this.options=t||e.defaults,this.options.renderer=this.options.renderer||new se,this.renderer=this.options.renderer,this.renderer.options=this.options,this.textRenderer=new re}static parse(e,t){return new ie(t).parse(e)}static parseInline(e,t){return new ie(t).parseInline(e)}parse(e,t=!0){let n="";for(let s=0;s<e.length;s++){const r=e[s];if(this.options.extensions&&this.options.extensions.renderers&&this.options.extensions.renderers[r.type]){const e=r,t=this.options.extensions.renderers[e.type].call({parser:this},e);if(!1!==t||!["space","hr","heading","code","table","blockquote","list","html","paragraph","text"].includes(e.type)){n+=t||"";continue}}switch(r.type){case"space":continue;case"hr":n+=this.renderer.hr();continue;case"heading":{const e=r;n+=this.renderer.heading(this.parseInline(e.tokens),e.depth,p(this.parseInline(e.tokens,this.textRenderer)));continue}case"code":{const e=r;n+=this.renderer.code(e.text,e.lang,!!e.escaped);continue}case"table":{const e=r;let t="",s="";for(let t=0;t<e.header.length;t++)s+=this.renderer.tablecell(this.parseInline(e.header[t].tokens),{header:!0,align:e.align[t]});t+=this.renderer.tablerow(s);let i="";for(let t=0;t<e.rows.length;t++){const n=e.rows[t];s="";for(let t=0;t<n.length;t++)s+=this.renderer.tablecell(this.parseInline(n[t].tokens),{header:!1,align:e.align[t]});i+=this.renderer.tablerow(s)}n+=this.renderer.table(t,i);continue}case"blockquote":{const e=r,t=this.parse(e.tokens);n+=this.renderer.blockquote(t);continue}case"list":{const e=r,t=e.ordered,s=e.start,i=e.loose;let l="";for(let t=0;t<e.items.length;t++){const n=e.items[t],s=n.checked,r=n.task;let o="";if(n.task){const e=this.renderer.checkbox(!!s);i?n.tokens.length>0&&"paragraph"===n.tokens[0].type?(n.tokens[0].text=e+" "+n.tokens[0].text,n.tokens[0].tokens&&n.tokens[0].tokens.length>0&&"text"===n.tokens[0].tokens[0].type&&(n.tokens[0].tokens[0].text=e+" "+n.tokens[0].tokens[0].text)):n.tokens.unshift({type:"text",text:e+" "}):o+=e+" "}o+=this.parse(n.tokens,i),l+=this.renderer.listitem(o,r,!!s)}n+=this.renderer.list(l,t,s);continue}case"html":{const e=r;n+=this.renderer.html(e.text,e.block);continue}case"paragraph":{const e=r;n+=this.renderer.paragraph(this.parseInline(e.tokens));continue}case"text":{let i=r,l=i.tokens?this.parseInline(i.tokens):i.text;for(;s+1<e.length&&"text"===e[s+1].type;)i=e[++s],l+="\n"+(i.tokens?this.parseInline(i.tokens):i.text);n+=t?this.renderer.paragraph(l):l;continue}default:{const e='Token with "'+r.type+'" type was not found.';if(this.options.silent)return console.error(e),"";throw new Error(e)}}}return n}parseInline(e,t){t=t||this.renderer;let n="";for(let s=0;s<e.length;s++){const r=e[s];if(this.options.extensions&&this.options.extensions.renderers&&this.options.extensions.renderers[r.type]){const e=this.options.extensions.renderers[r.type].call({parser:this},r);if(!1!==e||!["escape","html","link","image","strong","em","codespan","br","del","text"].includes(r.type)){n+=e||"";continue}}switch(r.type){case"escape":{const e=r;n+=t.text(e.text);break}case"html":{const e=r;n+=t.html(e.text);break}case"link":{const e=r;n+=t.link(e.href,e.title,this.parseInline(e.tokens,t));break}case"image":{const e=r;n+=t.image(e.href,e.title,e.text);break}case"strong":{const e=r;n+=t.strong(this.parseInline(e.tokens,t));break}case"em":{const e=r;n+=t.em(this.parseInline(e.tokens,t));break}case"codespan":{const e=r;n+=t.codespan(e.text);break}case"br":n+=t.br();break;case"del":{const e=r;n+=t.del(this.parseInline(e.tokens,t));break}case"text":{const e=r;n+=t.text(e.text);break}default:{const e='Token with "'+r.type+'" type was not found.';if(this.options.silent)return console.error(e),"";throw new Error(e)}}}return n}}class le{options;constructor(t){this.options=t||e.defaults}static passThroughHooks=new Set(["preprocess","postprocess","processAllTokens"]);preprocess(e){return e}postprocess(e){return e}processAllTokens(e){return e}}class oe{defaults={async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null};options=this.setOptions;parse=this.#e(ne.lex,ie.parse);parseInline=this.#e(ne.lexInline,ie.parseInline);Parser=ie;Renderer=se;TextRenderer=re;Lexer=ne;Tokenizer=w;Hooks=le;constructor(...e){this.use(...e)}walkTokens(e,t){let n=[];for(const s of e)switch(n=n.concat(t.call(this,s)),s.type){case"table":{const e=s;for(const s of e.header)n=n.concat(this.walkTokens(s.tokens,t));for(const s of e.rows)for(const e of s)n=n.concat(this.walkTokens(e.tokens,t));break}case"list":{const e=s;n=n.concat(this.walkTokens(e.items,t));break}default:{const e=s;this.defaults.extensions?.childTokens?.[e.type]?this.defaults.extensions.childTokens[e.type].forEach((s=>{const r=e[s].flat(1/0);n=n.concat(this.walkTokens(r,t))})):e.tokens&&(n=n.concat(this.walkTokens(e.tokens,t)))}}return n}use(...e){const t=this.defaults.extensions||{renderers:{},childTokens:{}};return e.forEach((e=>{const n={...e};if(n.async=this.defaults.async||n.async||!1,e.extensions&&(e.extensions.forEach((e=>{if(!e.name)throw new Error("extension name required");if("renderer"in e){const n=t.renderers[e.name];t.renderers[e.name]=n?function(...t){let s=e.renderer.apply(this,t);return!1===s&&(s=n.apply(this,t)),s}:e.renderer}if("tokenizer"in e){if(!e.level||"block"!==e.level&&"inline"!==e.level)throw new Error("extension level must be 'block' or 'inline'");const n=t[e.level];n?n.unshift(e.tokenizer):t[e.level]=[e.tokenizer],e.start&&("block"===e.level?t.startBlock?t.startBlock.push(e.start):t.startBlock=[e.start]:"inline"===e.level&&(t.startInline?t.startInline.push(e.start):t.startInline=[e.start]))}"childTokens"in e&&e.childTokens&&(t.childTokens[e.name]=e.childTokens)})),n.extensions=t),e.renderer){const t=this.defaults.renderer||new se(this.defaults);for(const n in e.renderer){if(!(n in t))throw new Error(`renderer '${n}' does not exist`);if("options"===n)continue;const s=n,r=e.renderer[s],i=t[s];t[s]=(...e)=>{let n=r.apply(t,e);return!1===n&&(n=i.apply(t,e)),n||""}}n.renderer=t}if(e.tokenizer){const t=this.defaults.tokenizer||new w(this.defaults);for(const n in e.tokenizer){if(!(n in t))throw new Error(`tokenizer '${n}' does not exist`);if(["options","rules","lexer"].includes(n))continue;const s=n,r=e.tokenizer[s],i=t[s];t[s]=(...e)=>{let n=r.apply(t,e);return!1===n&&(n=i.apply(t,e)),n}}n.tokenizer=t}if(e.hooks){const t=this.defaults.hooks||new le;for(const n in e.hooks){if(!(n in t))throw new Error(`hook '${n}' does not exist`);if("options"===n)continue;const s=n,r=e.hooks[s],i=t[s];le.passThroughHooks.has(n)?t[s]=e=>{if(this.defaults.async)return Promise.resolve(r.call(t,e)).then((e=>i.call(t,e)));const n=r.call(t,e);return i.call(t,n)}:t[s]=(...e)=>{let n=r.apply(t,e);return!1===n&&(n=i.apply(t,e)),n}}n.hooks=t}if(e.walkTokens){const t=this.defaults.walkTokens,s=e.walkTokens;n.walkTokens=function(e){let n=[];return n.push(s.call(this,e)),t&&(n=n.concat(t.call(this,e))),n}}this.defaults={...this.defaults,...n}})),this}setOptions(e){return this.defaults={...this.defaults,...e},this}lexer(e,t){return ne.lex(e,t??this.defaults)}parser(e,t){return ie.parse(e,t??this.defaults)}#e(e,t){return(n,s)=>{const r={...s},i={...this.defaults,...r};!0===this.defaults.async&&!1===r.async&&(i.silent||console.warn("marked(): The async option was set to true by an extension. The async: false option sent to parse will be ignored."),i.async=!0);const l=this.#t(!!i.silent,!!i.async);if(null==n)return l(new Error("marked(): input parameter is undefined or null"));if("string"!=typeof n)return l(new Error("marked(): input parameter is of type "+Object.prototype.toString.call(n)+", string expected"));if(i.hooks&&(i.hooks.options=i),i.async)return Promise.resolve(i.hooks?i.hooks.preprocess(n):n).then((t=>e(t,i))).then((e=>i.hooks?i.hooks.processAllTokens(e):e)).then((e=>i.walkTokens?Promise.all(this.walkTokens(e,i.walkTokens)).then((()=>e)):e)).then((e=>t(e,i))).then((e=>i.hooks?i.hooks.postprocess(e):e)).catch(l);try{i.hooks&&(n=i.hooks.preprocess(n));let s=e(n,i);i.hooks&&(s=i.hooks.processAllTokens(s)),i.walkTokens&&this.walkTokens(s,i.walkTokens);let r=t(s,i);return i.hooks&&(r=i.hooks.postprocess(r)),r}catch(e){return l(e)}}}#t(e,t){return n=>{if(n.message+="\nPlease report this to https://github.com/markedjs/marked.",e){const e="<p>An error occurred:</p><pre>"+c(n.message+"",!0)+"</pre>";return t?Promise.resolve(e):e}if(t)return Promise.reject(n);throw n}}}const ae=new oe;function ce(e,t){return ae.parse(e,t)}ce.options=ce.setOptions=function(e){return ae.setOptions(e),ce.defaults=ae.defaults,n(ce.defaults),ce},ce.getDefaults=t,ce.defaults=e.defaults,ce.use=function(...e){return ae.use(...e),ce.defaults=ae.defaults,n(ce.defaults),ce},ce.walkTokens=function(e,t){return ae.walkTokens(e,t)},ce.parseInline=ae.parseInline,ce.Parser=ie,ce.parser=ie.parse,ce.Renderer=se,ce.TextRenderer=re,ce.Lexer=ne,ce.lexer=ne.lex,ce.Tokenizer=w,ce.Hooks=le,ce.parse=ce;const he=ce.options,pe=ce.setOptions,ue=ce.use,ke=ce.walkTokens,ge=ce.parseInline,fe=ce,de=ie.parse,xe=ne.lex;e.Hooks=le,e.Lexer=ne,e.Marked=oe,e.Parser=ie,e.Renderer=se,e.TextRenderer=re,e.Tokenizer=w,e.getDefaults=t,e.lexer=xe,e.marked=ce,e.options=he,e.parse=fe,e.parseInline=ge,e.parser=de,e.setOptions=pe,e.use=ue,e.walkTokens=ke}));
+  </script>
+  <script>
+    // Apply saved theme + reading font before first paint to avoid a flash of the defaults.
+    try {
+      var t = localStorage.getItem('mdviewer.theme');
+      if (['midnight','paper','dark','sepia'].indexOf(t) >= 0) document.documentElement.dataset.theme = t;
+      var f = localStorage.getItem('mdviewer.font');
+      if (['system','serif','book','verdana','mono'].indexOf(f) >= 0) document.documentElement.dataset.font = f;
+    } catch (e) {}
+  </script>
+  <style>
+    /* ===== Color schemes — :root is "midnight" (the original/default).
+       Each theme redefines the FULL variable set so nothing falls through. ===== */
+    :root, html[data-theme="midnight"] {
+      --app-bg: linear-gradient(135deg, #0d1b2a 0%, #16213e 100%);
+      --sidebar-bg: rgba(0,0,0,0.25);
+      --panel: #1b2a3a;
+      --panel-hover: #25364a;
+      --border: #2d3e54;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #4cc9f0;
+      --accent-2: #7dd3fc;
+      --on-accent: #0d1b2a;
+      --good: #4ade80;
+      --warn: #fbbf24;
+      --bad: #f87171;
+      --link: #4cc9f0;
+      --link-hover: #7dd3fc;
+      --h1: #7dd3fc;
+      --h3: #4cc9f0;
+      --code-bg: rgba(0,0,0,0.35);
+      --code-text: #7dd3fc;
+      --pre-bg: rgba(0,0,0,0.4);
+      --pre-text: #e2e8f0;
+      --quote-bg: rgba(76,201,240,0.05);
+      --quote-border: #4cc9f0;
+      --quote-text: #94a3b8;
+      --th-bg: rgba(76,201,240,0.08);
+      --row-alt: rgba(0,0,0,0.15);
+      --active-bg: rgba(76,201,240,0.15);
+      --overlay-bg: rgba(13,27,42,0.88);
+    }
+    html[data-theme="paper"] {
+      --app-bg: #ffffff;
+      --sidebar-bg: #f6f8fa;
+      --panel: #ffffff;
+      --panel-hover: #eaeef2;
+      --border: #d0d7de;
+      --text: #1f2328;
+      --muted: #656d76;
+      --accent: #0969da;
+      --accent-2: #0550ae;
+      --on-accent: #ffffff;
+      --good: #1a7f37;
+      --warn: #9a6700;
+      --bad: #cf222e;
+      --link: #0969da;
+      --link-hover: #0550ae;
+      --h1: #1f2328;
+      --h3: #1f2328;
+      --code-bg: #eff1f3;
+      --code-text: #cf222e;
+      --pre-bg: #f6f8fa;
+      --pre-text: #1f2328;
+      --quote-bg: transparent;
+      --quote-border: #d0d7de;
+      --quote-text: #656d76;
+      --th-bg: #f6f8fa;
+      --row-alt: #f6f8fa;
+      --active-bg: #ddf4ff;
+      --overlay-bg: rgba(255,255,255,0.9);
+    }
+    html[data-theme="dark"] {
+      --app-bg: #0d1117;
+      --sidebar-bg: #010409;
+      --panel: #161b22;
+      --panel-hover: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-2: #79c0ff;
+      --on-accent: #0d1117;
+      --good: #3fb950;
+      --warn: #d29922;
+      --bad: #f85149;
+      --link: #58a6ff;
+      --link-hover: #79c0ff;
+      --h1: #f0f6fc;
+      --h3: #adbac7;
+      --code-bg: rgba(110,118,129,0.3);
+      --code-text: #79c0ff;
+      --pre-bg: #161b22;
+      --pre-text: #e6edf3;
+      --quote-bg: transparent;
+      --quote-border: #30363d;
+      --quote-text: #8b949e;
+      --th-bg: #161b22;
+      --row-alt: rgba(110,118,129,0.1);
+      --active-bg: rgba(56,139,253,0.15);
+      --overlay-bg: rgba(13,17,23,0.9);
+    }
+    html[data-theme="sepia"] {
+      --app-bg: #f4ecd8;
+      --sidebar-bg: #ece2c8;
+      --panel: #faf3e0;
+      --panel-hover: #efe6cc;
+      --border: #ddd0b0;
+      --text: #433422;
+      --muted: #8a7a5c;
+      --accent: #9a6a3a;
+      --accent-2: #7a5326;
+      --on-accent: #faf3e0;
+      --good: #5b7a2a;
+      --warn: #b07d1a;
+      --bad: #a5341f;
+      --link: #2f6f6a;
+      --link-hover: #1f4f4a;
+      --h1: #43352a;
+      --h3: #5b4632;
+      --code-bg: #e8dcc0;
+      --code-text: #9a341f;
+      --pre-bg: #ece2c8;
+      --pre-text: #433422;
+      --quote-bg: #efe6cc;
+      --quote-border: #c9a96a;
+      --quote-text: #7a6a4c;
+      --th-bg: #ece2c8;
+      --row-alt: #efe6cc;
+      --active-bg: #e6d8b0;
+      --overlay-bg: rgba(244,236,216,0.9);
+    }
+    /* ===== Reading fonts — all system-built-in; applied only to rendered content,
+       not the UI chrome. Code blocks keep their own monospace. ===== */
+    :root { --read-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif; }
+    html[data-font="serif"]   { --read-font: Georgia, ui-serif, "New York", Cambria, "Times New Roman", serif; }
+    html[data-font="book"]    { --read-font: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif; }
+    html[data-font="verdana"] { --read-font: Verdana, Tahoma, Geneva, "Segoe UI", sans-serif; }
+    html[data-font="mono"]    { --read-font: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--app-bg);
+      background-attachment: fixed;
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    body.resizing { user-select: none; }
+    body.resizing iframe { pointer-events: none; }
+    .app { display: flex; min-height: 100vh; }
+
+    /* ---------- sidebar ---------- */
+    #sidebar {
+      width: 290px; flex-shrink: 0;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      position: sticky; top: 0; height: 100vh;
+    }
+    #resizer {
+      width: 5px; flex-shrink: 0; cursor: col-resize;
+      position: sticky; top: 0; height: 100vh;
+      background: transparent;
+    }
+    #resizer:hover { background: var(--active-bg); }
+    body.no-sidebar #sidebar, body.no-sidebar #resizer { display: none; }
+    .side-head {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: 9px;
+      padding: 14px 14px 10px;
+    }
+    .side-head .brand {
+      font-weight: 700; font-size: 1.02em; letter-spacing: 0.01em;
+      color: var(--accent-2);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+    }
+    .side-head button {
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 4px 10px; cursor: pointer; font-size: 0.95em;
+    }
+    .side-head button:hover { border-color: var(--accent); }
+    #filter {
+      margin: 0 12px 10px;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 6px 10px; font-size: 0.85em;
+    }
+    #filter:focus { outline: none; border-color: var(--accent); }
+    .side-section { overflow-y: auto; min-height: 0; }
+    #treepane { flex: 1 1 auto; }
+    #favoritespane { flex: 0 0 auto; max-height: 26%; border-top: 1px solid var(--border); padding-bottom: 8px; }
+    #recentpane { flex: 0 0 auto; max-height: 32%; border-top: 1px solid var(--border); padding-bottom: 10px; }
+    .side-section h4 {
+      margin: 10px 14px 6px;
+      color: var(--muted); text-transform: uppercase;
+      font-size: 0.7em; letter-spacing: 0.1em; font-weight: 600;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .side-section h4 a { color: var(--muted); text-decoration: none; font-weight: 400; text-transform: none; letter-spacing: 0; cursor: pointer; }
+    .side-section h4 a:hover { color: var(--bad); }
+    .side-hint { color: var(--muted); font-size: 0.8em; padding: 4px 14px; }
+    #rootrow { padding: 0 12px 8px; display: none; }
+    #rootinput {
+      width: 100%;
+      background: var(--panel); color: var(--muted);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 4px 8px; font-size: 0.75em;
+      font-family: "SFMono-Regular", Menlo, monospace;
+    }
+    #rootinput:focus { outline: none; border-color: var(--accent); color: var(--text); }
+    #rootinput.attention {
+      border-color: var(--warn);
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.25);
+    }
+    #toast {
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      background: var(--panel); border: 1px solid var(--warn);
+      color: var(--text); padding: 8px 16px; border-radius: 8px;
+      font-size: 0.85em; z-index: 30; display: none;
+      max-width: 80%; text-align: center;
+    }
+    #toast.show { display: block; }
+    .file {
+      padding: 3px 14px; cursor: pointer;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-size: 0.85em;
+    }
+    .file:hover { background: var(--panel-hover); }
+    .file.active { background: var(--active-bg); color: var(--accent-2); }
+    .file.htmlfile::after { content: " ‹html›"; color: var(--muted); font-size: 0.8em; }
+    .file.pdffile::after { content: " ‹pdf›"; color: var(--muted); font-size: 0.8em; }
+    details.folder > summary {
+      cursor: pointer; color: var(--muted); font-size: 0.85em;
+      padding: 3px 14px; user-select: none;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    details.folder > summary:hover { color: var(--text); }
+    details.folder > .indent { margin-left: 14px; border-left: 1px solid var(--border); }
+    .recent-row {
+      display: flex; align-items: center; gap: 7px;
+      padding: 4px 14px; cursor: pointer; font-size: 0.85em;
+      white-space: nowrap;
+    }
+    .recent-row:hover { background: var(--panel-hover); }
+    .recent-row .label { overflow: hidden; text-overflow: ellipsis; }
+    .recent-row .meta { color: var(--muted); font-size: 0.8em; margin-left: auto; flex-shrink: 0; }
+    .recent-row .rm { visibility: hidden; color: var(--muted); flex-shrink: 0; }
+    .recent-row:hover .rm { visibility: visible; }
+    .recent-row .rm:hover { color: var(--bad); }
+
+    /* ---------- main ---------- */
+    main { flex: 1; padding: 24px; min-width: 0; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 16px; flex-wrap: wrap;
+      margin-bottom: 24px; padding-bottom: 12px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .topbar .path {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.85em;
+      color: var(--muted);
+      word-break: break-all;
+    }
+    .topbar .path[draggable="true"] { cursor: grab; color: var(--text); }
+    .topbar a { color: var(--accent-2); text-decoration: none; }
+    .topbar a:hover { color: var(--accent); }
+    .actions { flex-shrink: 0; display: flex; align-items: center; }
+    .actions a { margin-left: 16px; cursor: pointer; }
+    .iconbtn { font-size: 1.15em; line-height: 1; text-decoration: none; }
+    .iconbtn:hover { filter: brightness(1.25); }
+    #starbtn.starred { color: #f5c518; }
+    #starbtn.disabled { opacity: 0.4; }
+    /* full-page reading mode: only the content remains */
+    body.full-page #sidebar,
+    body.full-page #resizer,
+    body.full-page .topbar { display: none; }
+    body.full-page main { padding-top: 30px; }
+    #exitfull {
+      position: fixed; top: 12px; right: 14px; z-index: 25;
+      display: none; cursor: pointer;
+      width: 30px; height: 30px; border-radius: 7px;
+      background: var(--panel); color: var(--muted);
+      border: 1px solid var(--border); font-size: 0.85em;
+      opacity: 0.3; transition: opacity 0.15s;
+    }
+    #exitfull:hover { opacity: 1; color: var(--text); border-color: var(--accent); }
+    body.full-page #exitfull { display: block; }
+    #content {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 36px;
+      font-family: var(--read-font);
+    }
+    #content.framed { padding: 8px; }
+    #content iframe {
+      width: 100%; height: 80vh;
+      border: none; border-radius: 6px;
+      background: #fff;
+    }
+    /* Markdown styles */
+    #content h1, #content h2, #content h3, #content h4 {
+      color: var(--h1);
+      margin-top: 1.6em;
+      margin-bottom: 0.5em;
+      font-weight: 600;
+    }
+    #content h1 { font-size: 1.8em; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; margin-top: 0; }
+    #content h2 { font-size: 1.4em; border-bottom: 1px solid var(--border); padding-bottom: 0.2em; }
+    #content h3 { font-size: 1.15em; color: var(--h3); }
+    #content h4 { font-size: 1.0em; color: var(--h3); }
+    #content p { margin: 0.6em 0 1em; }
+    #content a { color: var(--link); }
+    #content a:hover { color: var(--link-hover); }
+    #content code {
+      font-family: "SFMono-Regular", Menlo, monospace;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+    #content pre {
+      background: var(--pre-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      overflow-x: auto;
+    }
+    #content pre code {
+      background: none;
+      padding: 0;
+      color: var(--pre-text);
+      font-size: 0.85em;
+    }
+    #content blockquote {
+      border-left: 3px solid var(--quote-border);
+      padding: 4px 14px;
+      color: var(--quote-text);
+      margin: 1em 0;
+      background: var(--quote-bg);
+    }
+    #content ul, #content ol { padding-left: 1.6em; margin: 0.4em 0 1em; }
+    #content li { margin: 0.25em 0; }
+    #content table {
+      border-collapse: collapse;
+      margin: 1em 0;
+      font-size: 0.92em;
+    }
+    #content th, #content td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+    }
+    #content th { background: var(--th-bg); color: var(--accent-2); font-weight: 600; }
+    #content tr:nth-child(even) td { background: var(--row-alt); }
+    #content hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+    #content img { max-width: 100%; }
+    /* checkbox lists rendered nicely */
+    #content input[type=checkbox] {
+      margin-right: 6px;
+      accent-color: var(--accent);
+    }
+    #content li.task-list-item { list-style: none; margin-left: -1.4em; }
+
+    /* ===== Obsidian-flavored constructs ===== */
+    /* frontmatter properties table */
+    #content table.frontmatter {
+      border-collapse: collapse; margin: 0 0 1.4em; font-size: 0.85em;
+      border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    }
+    #content table.frontmatter th, #content table.frontmatter td {
+      border: 1px solid var(--border); padding: 4px 12px; text-align: left; vertical-align: top;
+    }
+    #content table.frontmatter th { color: var(--muted); font-weight: 600; white-space: nowrap; background: var(--row-alt); }
+    #content table.frontmatter td { color: var(--text); }
+    /* highlight */
+    #content mark { background: var(--warn); color: #1a1a1a; padding: 0 3px; border-radius: 3px; }
+    /* callouts */
+    #content .callout {
+      border: 1px solid var(--border); border-left: 4px solid var(--accent);
+      border-radius: 6px; margin: 1em 0; padding: 2px 14px;
+      background: var(--quote-bg);
+    }
+    #content .callout-title { font-weight: 700; color: var(--accent-2); margin: 8px 0; cursor: default; }
+    #content details.callout > summary.callout-title { cursor: pointer; list-style: none; }
+    #content details.callout > summary::-webkit-details-marker { display: none; }
+    #content .callout-body > :first-child { margin-top: 0; }
+    #content .callout-body > :last-child { margin-bottom: 8px; }
+    #content .callout-tip, #content .callout-hint, #content .callout-success,
+    #content .callout-check, #content .callout-done { border-left-color: var(--good); }
+    #content .callout-warning, #content .callout-caution, #content .callout-attention,
+    #content .callout-important { border-left-color: var(--warn); }
+    #content .callout-danger, #content .callout-error, #content .callout-failure,
+    #content .callout-fail, #content .callout-bug, #content .callout-missing { border-left-color: var(--bad); }
+    /* custom task states */
+    #content li.custom-task { list-style: none; margin-left: -1.4em; }
+    #content .cb {
+      display: inline-block; width: 1.15em; height: 1.15em; line-height: 1.05em;
+      text-align: center; margin-right: 6px; border: 1px solid var(--muted); border-radius: 3px;
+      font-size: 0.8em; color: var(--muted); vertical-align: middle; font-family: var(--read-font, sans-serif);
+    }
+    #content li.task-cancelled { color: var(--muted); text-decoration: line-through; }
+    #content .cb-cancelled { border-color: var(--bad); color: var(--bad); }
+    #content .cb-important { border-color: var(--bad); color: var(--bad); }
+    #content .cb-partial { border-color: var(--warn); color: var(--warn); }
+    #content .cb-star { border-color: var(--warn); color: var(--warn); }
+    /* wikilinks */
+    #content a.wikilink { color: var(--link); text-decoration: none; border-bottom: 1px dashed var(--link); }
+    #content a.wikilink:hover { color: var(--link-hover); border-bottom-style: solid; }
+    #content img.wikiembed { max-width: 100%; }
+    /* footnotes */
+    #content sup.fnref { font-size: 0.75em; }
+    #content sup.fnref a { text-decoration: none; }
+    #content section.footnotes { margin-top: 2.5em; font-size: 0.9em; color: var(--muted); }
+    #content section.footnotes hr { margin-bottom: 1em; }
+    #content a.fnback { text-decoration: none; margin-left: 4px; }
+
+    .error {
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      color: var(--bad);
+      padding: 16px 20px;
+      border-radius: 6px;
+      font-size: 0.95em;
+    }
+    .error code { background: var(--code-bg); padding: 1px 5px; border-radius: 3px; color: var(--text); }
+    .error h3 { margin-top: 0; color: var(--bad); }
+
+    .hint {
+      color: var(--muted);
+      text-align: center;
+      padding: 60px 20px;
+      font-size: 0.9em;
+    }
+    .hint code { background: var(--code-bg); padding: 2px 6px; border-radius: 3px; color: var(--text); }
+
+    /* URL paste form */
+    .url-form {
+      display: flex; gap: 8px;
+      max-width: 720px; margin: 20px auto 0;
+    }
+    .url-form input {
+      flex: 1;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px 12px; font-size: 0.95em;
+      font-family: "SFMono-Regular", Menlo, monospace;
+    }
+    .url-form input:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .url-form button {
+      background: var(--accent); color: var(--on-accent);
+      border: none; border-radius: 6px;
+      padding: 10px 18px; font-weight: 600; cursor: pointer;
+      font-size: 0.95em;
+    }
+    .url-form button:hover { background: var(--accent-2); }
+
+    /* whole-window drop overlay */
+    #dropoverlay {
+      position: fixed; inset: 0; z-index: 10;
+      display: none; align-items: center; justify-content: center;
+      background: var(--overlay-bg);
+      border: 3px dashed var(--accent);
+      color: var(--accent-2); font-size: 1.4em;
+      pointer-events: none;
+    }
+    #dropoverlay.show { display: flex; }
+
+    /* help modal */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 20;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, 0.6);
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--panel);
+      border: 1px solid var(--border); border-radius: 10px;
+      max-width: 780px; width: 92%; max-height: 86vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.5);
+    }
+    .modal-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 24px; border-bottom: 1px solid var(--border);
+    }
+    .modal-head h3 { margin: 0; color: var(--accent-2); font-size: 1.1em; }
+    .modal-head button {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.1em; cursor: pointer;
+    }
+    .modal-head button:hover { color: var(--bad); }
+    .modal-body { overflow-y: auto; padding: 6px 24px 22px; font-size: 0.92em; }
+    .modal-body h4 { color: var(--accent); margin: 1.3em 0 0.4em; }
+    .modal-body code {
+      font-family: "SFMono-Regular", Menlo, monospace;
+      background: var(--code-bg); color: var(--code-text);
+      padding: 1px 6px; border-radius: 3px; font-size: 0.88em;
+    }
+    /* theme + font pickers (top bar) */
+    .theme-select, .font-select {
+      margin-left: 14px; vertical-align: middle;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 2px 6px; font-size: 0.85em; cursor: pointer;
+      font-family: inherit;
+    }
+    .theme-select:focus, .font-select:focus { outline: none; border-color: var(--accent); }
+    .modal-body ul { padding-left: 1.4em; margin: 0.3em 0 0.8em; }
+    .modal-body li { margin: 0.25em 0; }
+    .modal-body p { margin: 0.4em 0 0.8em; }
+    .modal-body .dim { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside id="sidebar">
+      <div class="side-head">
+        <span class="brand">🐦 SeaGull MD Viewer</span>
+        <button id="openbtn" title="Open a folder of .md/.html files">📂 open folder</button>
+        <input type="file" id="dirinput" webkitdirectory style="display:none">
+      </div>
+      <input id="filter" type="text" placeholder="filter files…">
+      <div class="side-section" id="treepane">
+        <h4 id="treelabel">Files</h4>
+        <div id="rootrow">
+          <input id="rootinput" type="text"
+                 placeholder="folder location, e.g. /Users/you/recipes"
+                 title="Absolute path of this folder. Enables drag-out links, inline images and full HTML rendering. Saved with the recent entry.">
+        </div>
+        <div id="tree"><div class="side-hint">Drop a folder anywhere on this window, or use 📂 above.</div></div>
+      </div>
+      <div class="side-section" id="favoritespane" style="display:none">
+        <h4>★ Favorites</h4>
+        <div id="favorites"></div>
+      </div>
+      <div class="side-section" id="recentpane">
+        <h4>Recent <a id="clearrecents" title="Clear recent list">clear</a></h4>
+        <div id="recents"></div>
+      </div>
+    </aside>
+    <div id="resizer" title="Drag to resize — double-click to reset"></div>
+
+    <main>
+      <div class="container">
+        <div class="topbar">
+          <div class="path" id="filepath">no file loaded</div>
+          <div class="actions">
+            <select id="themesel" class="theme-select" title="Color scheme">
+              <option value="midnight">Midnight</option>
+              <option value="paper">Paper</option>
+              <option value="dark">Dark</option>
+              <option value="sepia">Sepia</option>
+            </select>
+            <select id="fontsel" class="font-select" title="Reading font">
+              <option value="system" style="font-family:-apple-system,system-ui,sans-serif">System</option>
+              <option value="serif" style="font-family:Georgia,serif">Serif</option>
+              <option value="book" style="font-family:'Iowan Old Style',Palatino,serif">Book</option>
+              <option value="verdana" style="font-family:Verdana,sans-serif">Verdana</option>
+              <option value="mono" style="font-family:ui-monospace,Menlo,monospace">Mono</option>
+            </select>
+            <a id="starbtn" class="iconbtn" title="Favorite this file">☆</a>
+            <a id="fullpagebtn" class="iconbtn" title="Full-page reading — content only (Esc to exit)">⛶</a>
+            <a id="reloadbtn" class="iconbtn" title="Reload" href="#" onclick="window.location.reload(); return false;">🔄</a>
+            <a id="helpbtn" class="iconbtn" title="Help">❓</a>
+          </div>
+        </div>
+        <div id="content"></div>
+      </div>
+    </main>
+  </div>
+
+  <div id="dropoverlay">Drop a folder or .md / .html / .pdf file</div>
+  <div id="toast"></div>
+  <button id="exitfull" title="Exit full-page (Esc)">✕</button>
+
+  <div class="modal-overlay" id="helpmodal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>🐦 SeaGull MD Viewer — help</h3>
+        <button id="helpclose" title="Close (Esc)">✕</button>
+      </div>
+      <div class="modal-body">
+        <h4>Top bar</h4>
+        <p>Glyphs, left to right: <strong>☆</strong> favorite the open file (see below), <strong>⛶</strong> full-page reading (hides the sidebar and menus — only the rendered content remains; <strong>Esc</strong> or the floating <strong>✕</strong> top-right exits), <strong>🔄</strong> reload, <strong>❓</strong> this help. Two dropdowns set the color scheme and the reading font.</p>
+
+        <h4>Favorites</h4>
+        <ul>
+          <li>With a file open, click <strong>☆</strong> in the top bar to star it; the glyph fills to a gold <strong>★</strong>. Starred files appear in a <strong>Favorites</strong> section above Recent.</li>
+          <li>Favorites are the way to keep individual <em>files</em> handy — Recent mostly tracks the folders and links you open, not files clicked inside a tree.</li>
+          <li>Click a favorite to open it; the <strong>★</strong> on its row (or the top-bar star) un-stars it.</li>
+          <li>Starring snapshots the file's content, so a favorite reopens even when the folder isn't loaded and without the <code>file://</code> flag. (It's a point-in-time copy; re-star to refresh.)</li>
+        </ul>
+
+        <h4>Color scheme &amp; reading font</h4>
+        <p>Two dropdowns in the top bar; both choices are remembered. The font (System / Serif / Book / Verdana / Mono — all built into the OS, nothing downloaded) applies only to the rendered content; the UI and code blocks are unaffected.</p>
+        <ul>
+          <li><strong>Midnight</strong> — the original dark navy/cyan scheme.</li>
+          <li><strong>Paper</strong> — clean black-on-white, GitHub-style.</li>
+          <li><strong>Dark</strong> — neutral charcoal grey, easy on the eyes.</li>
+          <li><strong>Sepia</strong> — warm low-contrast tones for long reading.</li>
+        </ul>
+
+        <h4>Opening things</h4>
+        <ul>
+          <li><strong>Drop a folder</strong> anywhere on this window — its <code>.md</code>, <code>.html</code>, and <code>.pdf</code> files appear as a tree in the sidebar. Drop a single file to render it directly.</li>
+          <li><strong>📂 open folder</strong> — same thing via a picker instead of dragging. Folders open this way load <em>lazily</em> — only the files you click are read (large folders open instantly). Recent then remembers just the files you've viewed; on a later reload, unopened files prompt you to re-pick the folder.</li>
+          <li><strong>Paste a URL or path</strong> on the empty start page. End it with <code>/</code> to load it as a folder.</li>
+          <li><strong>Parameters:</strong> <code>seagull-md-viewer.html?file=/abs/path/foo.md</code> renders one file; <code>seagull-md-viewer.html?dir=/abs/path/folder</code> loads a whole folder into the sidebar. <span class="dim">Both also accept <code>http(s)://</code> URLs.</span></li>
+        </ul>
+
+        <h4>Sidebar</h4>
+        <ul>
+          <li><strong>Tree</strong> — click a file to render it; folders collapse/expand. Hover a clipped name to see it in full.</li>
+          <li><strong>Filter box</strong> — type to narrow the tree (matches anywhere in the path).</li>
+          <li><strong>Resize</strong> — drag the divider between sidebar and content; double-click it to reset (the width is remembered). To hide the sidebar entirely, use <strong>⛶</strong> full-page mode in the top bar.</li>
+        </ul>
+
+        <h4>Recent</h4>
+        <ul>
+          <li>Folders, files and parameter loads land here automatically (newest first, capped at 15). <strong>✕</strong> removes one entry, <strong>clear</strong> empties the list.</li>
+          <li><strong>Chrome/Edge:</strong> reopening a dropped folder is <em>live</em> — the browser asks once to re-allow access, then you see current content.</li>
+          <li><strong>Brave/Safari:</strong> dropped folders reopen from a <em>cached snapshot</em> (marked “cached”). Re-drop the folder to refresh it.</li>
+          <li>Everything is stored locally in this browser profile (localStorage + IndexedDB). Clearing site data wipes it.</li>
+        </ul>
+
+        <h4>Folder location</h4>
+        <p>Browsers hide the absolute path of dropped folders, so the viewer can’t know where files live on disk. Type the folder’s path once into the <strong>folder location</strong> box above the tree (e.g. <code>/Users/you/recipes</code>) — it’s saved with the recent entry. This unlocks:</p>
+        <ul>
+          <li><strong>Drag-out links</strong> for every file in the tree,</li>
+          <li><strong>inline images</strong> in markdown (relative paths resolve to real files),</li>
+          <li><strong>full-fidelity HTML</strong> (images and styles load).</li>
+        </ul>
+        <p class="dim">Folders loaded via <code>?dir=</code> need none of this — the path is already known.</p>
+
+        <h4>Drag a file to another window</h4>
+        <ul>
+          <li>Drag a <strong>file row</strong> from the tree — or the <strong>filename in the top bar</strong> — and drop it on another browser window’s <strong>tab bar or address bar</strong>. That window opens the viewer on that file.</li>
+          <li>Dragging a <strong>folder name</strong> gives a <code>?dir=</code> link that opens the whole folder.</li>
+          <li>Requires the folder location to be set (or a <code>?file=</code>/<code>?dir=</code> load, where it’s automatic).</li>
+        </ul>
+
+        <h4>Obsidian-flavored markdown</h4>
+        <p>Beyond standard Markdown + GFM (tables, task lists, strikethrough), these Obsidian extensions are supported — all built-in, no plugins:</p>
+        <ul>
+          <li><strong>Wikilinks</strong> <code>[[note]]</code>, <code>[[path/note]]</code>, <code>[[note#heading|alias]]</code> — click to open the target note (and scroll to the heading). Resolves by path or basename within the loaded folder; unresolved links say "note not found".</li>
+          <li><strong>Embeds</strong> <code>![[image.png]]</code> — shown when the folder location is known (resolved against it).</li>
+          <li><strong>Callouts</strong> <code>&gt; [!note]</code>, <code>[!tip]</code>, <code>[!warning]</code>, … — styled boxes; add <code>-</code>/<code>+</code> (<code>[!tip]-</code>) for a collapsible one.</li>
+          <li><strong>Frontmatter</strong> (YAML <code>---</code> block) → a compact properties table.</li>
+          <li><strong>Highlight</strong> <code>==text==</code>, <strong>comments</strong> <code>%%hidden%%</code>, <strong>footnotes</strong> <code>[^1]</code>, and custom task states <code>- [/]</code> <code>- [-]</code> <code>- [&gt;]</code>.</li>
+        </ul>
+        <p class="dim">Wikilinks resolve only when a folder/vault is loaded (like Obsidian needing the vault open). Math <code>$…$</code> and Mermaid are intentionally <em>not</em> supported — they'd require heavyweight libraries and break the single-file, offline design.</p>
+
+        <h4>HTML &amp; PDF files</h4>
+        <p><strong>HTML</strong> files show up in the tree (marked <code>‹html›</code>) and render in an isolated frame with scripts disabled. With the folder location set, the frame loads the real file so its images and CSS work; otherwise it renders from the cached copy without them.</p>
+        <p><strong>PDF</strong> files (marked <code>‹pdf›</code>) render in your browser's <em>built-in</em> PDF viewer — no extra library is bundled. They work from a dropped file, the folder location, the server, or <code>?file=</code>; a PDF in a <em>dropped folder</em> is held in memory so it previews even on Brave/Safari.</p>
+
+        <h4>Running over a local server (optional)</h4>
+        <p>Drag-and-drop needs nothing. But to use <code>?file=</code>/<code>?dir=</code> <em>without</em> a browser flag — and to make relative images, <code>?dir=</code> folder browsing, and drag-out links all work — serve the folder over a tiny local web server. Any static server works; the simplest, with no install, is Python's:<br><code>python3 -m http.server 8001 --bind 127.0.0.1</code><br>then open <code>http://localhost:8001/seagull-md-viewer.html</code>. The folder you serve becomes the web root, so keep the viewer and your content under it. (<code>npx serve</code>, <code>php -S localhost:8001</code>, … work too.) Bonus: this mirrors how the viewer behaves once deployed, so it doubles as a pre-publish test.</p>
+
+        <h4>Caveats</h4>
+        <ul>
+          <li>Loading <em>markdown</em> via <code>?file=</code>/<code>?dir=</code> with <code>file://</code> paths needs the browser launched as<br><code>open -na "Brave Browser" --args --allow-file-access-from-files</code><br>or a local server (<code>python3 -m http.server</code>). Drag-and-drop never needs this.</li>
+          <li>Brave disables the File System Access API by default, so folder reopening falls back to cached snapshots there.</li>
+        </ul>
+
+        <h4>Customizing — add your own theme</h4>
+        <p>This is one self-contained HTML file; everything is editable inside it. A theme is just a set of CSS-variable <em>values</em> — no style rules change. To add one:</p>
+        <ol>
+          <li>Near the top of the <code>&lt;style&gt;</code> block, find the comment<br><code>/* ===== Color schemes — :root is "midnight"… */</code></li>
+          <li>Copy any existing <code>html[data-theme="…"]</code> block (e.g. the <code>paper</code> one) and rename it, say <code>html[data-theme="forest"]</code>.</li>
+          <li>Change its values — <code>--app-bg</code>, <code>--panel</code>, <code>--text</code>, <code>--link</code>, <code>--code-bg</code>, <code>--code-text</code>, and the rest. Keep <strong>all</strong> the variables; a missing one falls back to Midnight and looks broken.</li>
+          <li>Add a choice to the dropdown: in <code>&lt;select id="themesel"&gt;</code> add <code>&lt;option value="forest"&gt;Forest&lt;/option&gt;</code>.</li>
+          <li>Register the key in two JS lists: the <code>THEMES</code> array (<code>const THEMES = [… , 'forest']</code>) and the matching array in the small anti-flash script in <code>&lt;head&gt;</code> (so it applies before first paint).</li>
+        </ol>
+
+        <h4>Customizing — add your own font</h4>
+        <ol>
+          <li>Find the comment <code>/* ===== Reading fonts … */</code> and add a line like<br><code>html[data-font="charter"] { --read-font: Charter, Georgia, serif; }</code></li>
+          <li>Use only fonts already installed on the system, written as a fallback stack — that keeps the file self-contained (no downloads).</li>
+          <li>Add a choice to <code>&lt;select id="fontsel"&gt;</code>:<br><code>&lt;option value="charter" style="font-family:Charter,serif"&gt;Charter&lt;/option&gt;</code></li>
+          <li>Register the key in the <code>FONTS</code> array and the anti-flash font list in <code>&lt;head&gt;</code>.</li>
+        </ol>
+        <p class="dim">The reading font applies only to <code>#content</code> (the rendered markdown); the UI chrome and code blocks are untouched. Theme and font are independent — any combination works.</p>
+
+        <h4>License &amp; credits</h4>
+        <p>SeaGull MD Viewer is released under the <strong>MIT License</strong> — © 2026 Sea Gull Way Ventures Inc. Full text is in the comment at the top of this HTML file (and in <code>LICENSE</code>).</p>
+        <p>Markdown rendering by <strong>marked</strong> v12.0.2 (<a href="https://github.com/markedjs/marked" target="_blank" rel="noopener">markedjs/marked</a>), MIT-licensed, © 2011-2024 Christopher Jeffrey and contributors — <strong>inlined</strong> into this file (no CDN, fully self-contained). See <code>THIRD-PARTY-NOTICES.md</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    marked.setOptions({ gfm: true, breaks: false });
+
+    /* ===== Obsidian-flavored markdown — all self-contained, no dependencies ===== */
+    const escHtml = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const escAttr = s => escHtml(s).replace(/"/g, '&quot;');
+    const CALLOUT_ICONS = {
+      note: '📝', info: 'ℹ️', abstract: '📄', summary: '📄', tldr: '📄', todo: '☑️',
+      tip: '💡', hint: '💡', important: '❗', success: '✅', check: '✅', done: '✅',
+      question: '❓', faq: '❓', help: '❓', warning: '⚠️', caution: '⚠️', attention: '⚠️',
+      failure: '❌', fail: '❌', missing: '❌', danger: '🚨', error: '🚨', bug: '🐛',
+      example: '📋', quote: '💬', cite: '💬'
+    };
+
+    // ==highlight==
+    const highlightExt = {
+      name: 'highlight', level: 'inline',
+      start(src) { const i = src.indexOf('=='); return i < 0 ? undefined : i; },
+      tokenizer(src) {
+        const m = /^==(?=\S)([\s\S]*?\S)==/.exec(src);
+        if (m) return { type: 'highlight', raw: m[0], tokens: this.lexer.inlineTokens(m[1]) };
+      },
+      renderer(t) { return '<mark>' + this.parser.parseInline(t.tokens) + '</mark>'; }
+    };
+
+    // %%comment%% (inline or block) → rendered to nothing
+    const commentExt = {
+      name: 'comment', level: 'inline',
+      start(src) { const i = src.indexOf('%%'); return i < 0 ? undefined : i; },
+      tokenizer(src) { const m = /^%%[\s\S]*?%%/.exec(src); if (m) return { type: 'comment', raw: m[0] }; },
+      renderer() { return ''; }
+    };
+
+    // > [!type] callouts (collapsible with -/+)
+    const calloutExt = {
+      name: 'callout', level: 'block',
+      start(src) { const i = src.indexOf('> [!'); return i < 0 ? undefined : i; },
+      tokenizer(src) {
+        const m = /^> *\[!([A-Za-z]+)\]([+-]?)([^\n]*)((?:\n>[^\n]*)*)/.exec(src);
+        if (!m) return;
+        const body = (m[4] || '').split('\n').map(l => l.replace(/^>[ ]?/, '')).join('\n').replace(/^\n+/, '');
+        return { type: 'callout', raw: m[0], ctype: m[1].toLowerCase(), fold: m[2],
+                 title: m[3].trim(), tokens: this.lexer.blockTokens(body, []) };
+      },
+      renderer(t) {
+        const icon = CALLOUT_ICONS[t.ctype] || CALLOUT_ICONS.note;
+        const title = escHtml(t.title || (t.ctype.charAt(0).toUpperCase() + t.ctype.slice(1)));
+        const body = this.parser.parse(t.tokens);
+        if (t.fold === '-' || t.fold === '+') {
+          return '<details class="callout callout-' + t.ctype + '"' + (t.fold === '+' ? ' open' : '') +
+            '><summary class="callout-title">' + icon + ' ' + title + '</summary><div class="callout-body">' + body + '</div></details>';
+        }
+        return '<div class="callout callout-' + t.ctype + '"><div class="callout-title">' + icon + ' ' + title +
+          '</div><div class="callout-body">' + body + '</div></div>';
+      }
+    };
+
+    // [[wikilink]], [[target#heading|alias]], ![[embed]]
+    const wikilinkExt = {
+      name: 'wikilink', level: 'inline',
+      start(src) { const i = src.indexOf('[['); return i < 0 ? undefined : i; },
+      tokenizer(src) {
+        const m = /^(!?)\[\[([^\]#|]*)(#[^\]|]+)?(?:\|([^\]]+))?\]\]/.exec(src);
+        if (!m) return;
+        return { type: 'wikilink', raw: m[0], embed: m[1] === '!',
+                 target: (m[2] || '').trim(), heading: (m[3] || '').slice(1).trim(), display: (m[4] || '').trim() };
+      },
+      renderer(t) {
+        if (t.embed && /\.(png|jpe?g|gif|svg|webp|avif|bmp)$/i.test(t.target))
+          return '<img class="wikiembed" data-target="' + escAttr(t.target) + '" alt="' + escAttr(t.display || t.target) + '">';
+        const label = t.display || (t.target + (t.heading ? '#' + t.heading : '')) || ('#' + t.heading);
+        return '<a class="wikilink" href="#" data-target="' + escAttr(t.target) +
+               '" data-heading="' + escAttr(t.heading) + '">' + escHtml(label) + '</a>';
+      }
+    };
+
+    marked.use({ extensions: [highlightExt, commentExt, calloutExt, wikilinkExt] });
+
+    const params = new URLSearchParams(window.location.search);
+    const fileParam = params.get('file');
+    const dirParam = params.get('dir');
+    const content = document.getElementById('content');
+    const pathEl = document.getElementById('filepath');
+    const treeEl = document.getElementById('tree');
+    const treeLabelEl = document.getElementById('treelabel');
+    const recentsEl = document.getElementById('recents');
+    const favoritesEl = document.getElementById('favorites');
+    const favoritesPane = document.getElementById('favoritespane');
+    const starBtn = document.getElementById('starbtn');
+    const filterInput = document.getElementById('filter');
+    const overlay = document.getElementById('dropoverlay');
+    const rootRow = document.getElementById('rootrow');
+    const rootInput = document.getElementById('rootinput');
+    const sidebar = document.getElementById('sidebar');
+    starBtn.addEventListener('click', toggleFavorite);
+
+    const isMd = name => /\.(md|markdown|mdown|mkd)$/i.test(name);
+    const isHtml = name => /\.(html?|xhtml)$/i.test(name);
+    const isPdf = name => /\.pdf$/i.test(name);
+    const isViewable = name => isMd(name) || isHtml(name) || isPdf(name);
+
+    const viewerBase = window.location.href.replace(/[?#].*$/, '');
+
+    let currentTreeLabel = '';
+    let currentRecentId = null;   // recents record backing the current tree (for persisting root)
+    let currentTreeLazyPicker = false;  // picker tree backed by live File objects → read-through cache on click
+    let currentRoot = null;       // normalized base URL of the current tree, e.g. file:///Users/x/recipes
+    let currentRootRaw = '';      // what the user typed (for display)
+    let currentFile = null;       // {path, url} of the rendered file — powers top-bar drag-out
+    let activeFileEl = null;
+    let activeNode = null;
+
+    /* ================= storage: localStorage (recent list) + IndexedDB (payloads) ================= */
+
+    function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+    const RECENTS_KEY = 'mdviewer.recents';
+    const MAX_RECENTS = 15;
+
+    function loadRecents() {
+      try { return JSON.parse(lsGet(RECENTS_KEY)) || []; } catch (e) { return []; }
+    }
+    function saveRecents(list) { lsSet(RECENTS_KEY, JSON.stringify(list.slice(0, MAX_RECENTS))); }
+    function recentKey(rec) { return rec.type + '|' + (rec.url || rec.label); }
+
+    function idbOpen() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open('mdviewer', 2);
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains('payloads')) db.createObjectStore('payloads');
+          if (!db.objectStoreNames.contains('favorites')) db.createObjectStore('favorites');
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+    function idbTx(store, mode, fn) {
+      return idbOpen().then(db => new Promise((resolve, reject) => {
+        const tx = db.transaction(store, mode);
+        const out = fn(tx.objectStore(store));
+        tx.oncomplete = () => resolve(out && out.result);
+        tx.onerror = () => reject(tx.error);
+      }));
+    }
+    // recent payloads (handles/snapshots) live in 'payloads'; favorite snapshots in 'favorites'
+    const idbPut = (id, value) => idbTx('payloads', 'readwrite', s => s.put(value, id));
+    const idbGet = id => idbTx('payloads', 'readonly', s => s.get(id));
+    const idbDel = id => idbTx('payloads', 'readwrite', s => s.delete(id));
+    const idbClear = () => idbTx('payloads', 'readwrite', s => s.clear());
+    const favPut = (id, value) => idbTx('favorites', 'readwrite', s => s.put(value, id));
+    const favGet = id => idbTx('favorites', 'readonly', s => s.get(id));
+    const favDel = id => idbTx('favorites', 'readwrite', s => s.delete(id));
+
+    // rec: {type: 'dir'|'file'|'url', label, url?, root?}; payload: {handle} | {files} | {content} | null
+    async function addRecent(rec, payload) {
+      let list = loadRecents();
+      const existing = list.find(r => recentKey(r) === recentKey(rec));
+      if (existing) {
+        rec.id = existing.id;
+        rec.root = rec.root || existing.root;  // re-dropping a folder must not lose its saved location
+        list = list.filter(r => r !== existing);
+      } else {
+        rec.id = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      }
+      rec.when = Date.now();
+      list.unshift(rec);
+      // entries pushed past the cap are about to be dropped from the list — delete
+      // their payloads too, or snapshots would orphan in IndexedDB forever
+      for (const stale of list.slice(MAX_RECENTS)) idbDel(stale.id).catch(() => {});
+      saveRecents(list);
+      if (payload) { try { await idbPut(rec.id, payload); } catch (e) { /* recents row will report on click */ } }
+      renderRecents();
+      return rec;
+    }
+
+    function touchRecent(id) {
+      let list = loadRecents();
+      const rec = list.find(r => r.id === id);
+      if (!rec) return;
+      rec.when = Date.now();
+      list = [rec, ...list.filter(r => r !== rec)];
+      saveRecents(list);
+      renderRecents();
+    }
+
+    function removeRecent(id) {
+      saveRecents(loadRecents().filter(r => r.id !== id));
+      idbDel(id).catch(() => {});
+      renderRecents();
+    }
+
+    function timeAgo(ts) {
+      const s = (Date.now() - ts) / 1000;
+      if (s < 90) return 'now';
+      if (s < 3600) return Math.round(s / 60) + 'm';
+      if (s < 86400) return Math.round(s / 3600) + 'h';
+      if (s < 86400 * 30) return Math.round(s / 86400) + 'd';
+      return new Date(ts).toLocaleDateString();
+    }
+
+    function renderRecents() {
+      const list = loadRecents();
+      recentsEl.innerHTML = '';
+      if (!list.length) {
+        recentsEl.innerHTML = '<div class="side-hint">Nothing yet — folders and files you open land here.</div>';
+        return;
+      }
+      for (const rec of list) {
+        const row = document.createElement('div');
+        row.className = 'recent-row';
+        row.title = rec.url || rec.label;
+        const icon = document.createElement('span');
+        icon.textContent = rec.type === 'dir' ? '📁' : rec.type === 'url' ? '🔗' : '📄';
+        const label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = rec.label;
+        const meta = document.createElement('span');
+        meta.className = 'meta';
+        meta.textContent = timeAgo(rec.when);
+        const rm = document.createElement('span');
+        rm.className = 'rm';
+        rm.textContent = '✕';
+        rm.title = 'Remove from recents';
+        rm.onclick = e => { e.stopPropagation(); removeRecent(rec.id); };
+        row.append(icon, label, meta, rm);
+        row.onclick = () => openRecent(rec).catch(err => showError('Could not reopen', '<p>' + err.message + '</p>'));
+        recentsEl.appendChild(row);
+      }
+    }
+
+    async function openRecent(rec) {
+      if (rec.url) {
+        window.location.search = (rec.type === 'dir' ? '?dir=' : '?file=') + encodeURIComponent(rec.url);
+        return;
+      }
+      let payload = null;
+      try { payload = await idbGet(rec.id); } catch (e) {}
+      if (!payload) {
+        removeRecent(rec.id);
+        showError('Recent entry unavailable',
+          '<p>The stored data for <code>' + rec.label + '</code> is gone (browser storage was cleared, or saving failed). Drop it again to re-add.</p>');
+        return;
+      }
+      currentRecentId = rec.id;
+      currentRootRaw = rec.root || '';
+      currentRoot = normalizeRoot(rec.root);
+      if (payload.handle) {
+        const h = payload.handle;
+        let perm = await h.queryPermission({ mode: 'read' });
+        if (perm !== 'granted') perm = await h.requestPermission({ mode: 'read' });
+        if (perm !== 'granted') { showError('Permission denied', '<p>The browser did not grant access to <code>' + rec.label + '</code>.</p>'); return; }
+        if (h.kind === 'directory') showTree(await treeFromHandle(h), h.name, false);
+        else if (isPdf(h.name)) { const f = await h.getFile(); renderPdfFile(URL.createObjectURL(f), h.name, h.name); currentFile = { path: h.name, url: null, pdf: true, blob: f }; updateStar(); }
+        else render(await (await h.getFile()).text(), h.name);
+      } else if (payload.picker) {
+        // lazy picker folder: rebuild the tree from the saved path list; files you'd
+        // opened render from the read-through cache, the rest prompt a re-pick on click.
+        const items = (payload.paths || []).map(p => {
+          const c = payload.cache && payload.cache[p.path];
+          return c ? Object.assign({ path: p.path }, c) : { path: p.path };
+        });
+        showTree(treeFromSnapshot(items), rec.label, true);
+      } else if (payload.files) {
+        showTree(treeFromSnapshot(payload.files), rec.label, true);
+      } else if (payload.blob) {
+        renderPdfFile(URL.createObjectURL(payload.blob), rec.label, rec.label);
+        currentFile = { path: rec.label, url: null, pdf: true, blob: payload.blob };
+        updateStar();
+      } else if (payload.content != null) {
+        render(payload.content, rec.label + ' (cached)');
+      }
+      touchRecent(rec.id);
+    }
+
+    /* ================= favorites (starred files) ================= */
+
+    const FAVORITES_KEY = 'mdviewer.favorites';
+
+    function loadFavorites() {
+      try { return JSON.parse(lsGet(FAVORITES_KEY)) || []; } catch (e) { return []; }
+    }
+    function saveFavorites(list) { lsSet(FAVORITES_KEY, JSON.stringify(list)); }
+    // identity: prefer the real URL, else the tree path, else the label
+    function favKey(rec) { return rec.type + '|' + (rec.url || rec.path || rec.label); }
+    function isFavorited(rec) { return !!rec && loadFavorites().some(f => favKey(f) === favKey(rec)); }
+
+    // a favorite record for whatever file is currently rendered (null if none)
+    function currentFavRec() {
+      if (!currentFile) return null;
+      return {
+        type: 'file',
+        label: currentFile.path.split('/').pop(),
+        path: currentFile.path,
+        url: currentFile.url || null,
+        html: !!currentFile.html,
+        pdf: !!currentFile.pdf,
+      };
+    }
+
+    async function addFavorite(rec, payload) {
+      const list = loadFavorites();
+      if (list.some(f => favKey(f) === favKey(rec))) return;
+      rec.id = 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      rec.when = Date.now();
+      list.unshift(rec);
+      saveFavorites(list);
+      if (payload && (payload.content != null || payload.blob || payload.pdf)) { try { await favPut(rec.id, payload); } catch (e) {} }
+      renderFavorites();
+    }
+    function removeFavorite(id) {
+      saveFavorites(loadFavorites().filter(f => f.id !== id));
+      favDel(id).catch(() => {});
+      renderFavorites();
+      updateStar();
+    }
+    function removeFavoriteByKey(key) {
+      const rec = loadFavorites().find(f => favKey(f) === key);
+      if (rec) removeFavorite(rec.id);
+    }
+
+    function toggleFavorite() {
+      const rec = currentFavRec();
+      if (!rec) { toast('Open a file first, then star it to add a favorite.'); return; }
+      if (isFavorited(rec)) removeFavoriteByKey(favKey(rec));
+      else addFavorite(rec, { content: currentFile.text ?? null, html: !!currentFile.html, pdf: !!currentFile.pdf, blob: currentFile.blob || null, url: currentFile.url || null });
+      updateStar();
+    }
+
+    function updateStar() {
+      const rec = currentFavRec();
+      const on = isFavorited(rec);
+      starBtn.textContent = on ? '★' : '☆';
+      starBtn.classList.toggle('starred', on);
+      starBtn.classList.toggle('disabled', !rec);
+      starBtn.title = !rec ? 'Open a file to favorite it'
+        : on ? 'Unfavorite this file' : 'Favorite this file';
+    }
+
+    function renderFavorites() {
+      const list = loadFavorites();
+      favoritesPane.style.display = list.length ? '' : 'none';
+      favoritesEl.innerHTML = '';
+      for (const rec of list) {
+        const row = document.createElement('div');
+        row.className = 'recent-row';
+        row.title = rec.url || rec.path || rec.label;
+        const icon = document.createElement('span');
+        icon.textContent = rec.pdf ? '📕' : rec.html ? '🌐' : '📄';
+        const label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = rec.label;
+        const rm = document.createElement('span');
+        rm.className = 'rm';
+        rm.textContent = '★';
+        rm.title = 'Unfavorite';
+        rm.onclick = e => { e.stopPropagation(); removeFavorite(rec.id); };
+        row.append(icon, label, rm);
+        row.onclick = () => openFavorite(rec).catch(err => showError('Could not open favorite', '<p>' + err.message + '</p>'));
+        favoritesEl.appendChild(row);
+      }
+    }
+
+    async function openFavorite(rec) {
+      let payload = null;
+      try { payload = await favGet(rec.id); } catch (e) {}
+      if (payload && payload.pdf) {
+        renderPdfFile(payload.blob ? URL.createObjectURL(payload.blob) : (rec.url || null), rec.label, rec.label);
+        currentFile = { path: rec.path || rec.label, url: rec.url || null, pdf: true, blob: payload.blob || null };
+        updateTopDrag();
+        updateStar();
+      } else if (payload && payload.content != null) {
+        if (payload.html) {
+          await renderHtmlFile(null, null, rec.label, payload.content);
+        } else {
+          render(payload.content, rec.label, rec.url || null);
+        }
+        currentFile = { path: rec.path || rec.label, url: rec.url || null, text: payload.content, html: !!payload.html };
+        updateTopDrag();
+        updateStar();
+      } else if (rec.url) {
+        window.location.search = '?file=' + encodeURIComponent(rec.url);
+      } else {
+        removeFavorite(rec.id);
+        showError('Favorite unavailable',
+          '<p>The stored copy of <code>' + rec.label + '</code> is gone (browser storage was cleared). Re-open the file and star it again.</p>');
+      }
+    }
+
+    /* ================= folder location (absolute path the browser won't tell us) ================= */
+
+    function encPath(p) { return p.split('/').map(encodeURIComponent).join('/'); }
+
+    function normalizeRoot(raw) {
+      if (!raw) return null;
+      let s = raw.trim().replace(/\/+$/, '');
+      if (!s) return null;
+      if (/^(file|https?):\/\//i.test(s)) return s;
+      if (s.startsWith('/')) return 'file://' + encPath(s);
+      return null;
+    }
+
+    // URL of a tree-relative path, when the folder location is known
+    function fileUrl(path) {
+      return currentRoot ? currentRoot + '/' + encPath(path) : null;
+    }
+
+    function updateRootRow() {
+      rootRow.style.display = currentTreeLabel ? 'block' : 'none';
+      rootInput.value = currentRootRaw || '';
+    }
+
+    rootInput.addEventListener('change', () => {
+      currentRootRaw = rootInput.value.trim();
+      currentRoot = normalizeRoot(currentRootRaw);
+      if (currentRecentId) {
+        const list = loadRecents();
+        const rec = list.find(r => r.id === currentRecentId);
+        if (rec) { rec.root = currentRootRaw; saveRecents(list); }
+      }
+      // re-render the open file so images/raw link/drag pick up the new base
+      if (activeNode) openTreeFile(activeNode.node, activeNode.el);
+    });
+
+    /* ================= directory trees =================
+       Node: {type:'dir', name, path, children} | {type:'file', name, path, url?, read: () => Promise<string>} */
+
+    function nodeCmp(a, b) {
+      if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    }
+
+    // Live tree from a FileSystemDirectoryHandle (Chromium; survives reloads via IndexedDB)
+    async function treeFromHandle(dirHandle, prefix) {
+      prefix = prefix || '';
+      const nodes = [];
+      for await (const handle of dirHandle.values()) {
+        if (handle.name.startsWith('.')) continue;
+        if (handle.kind === 'directory') {
+          const children = await treeFromHandle(handle, prefix + handle.name + '/');
+          if (children.length) nodes.push({ type: 'dir', name: handle.name, path: prefix + handle.name, children });
+        } else if (isViewable(handle.name)) {
+          nodes.push({
+            type: 'file', name: handle.name, path: prefix + handle.name,
+            read: () => handle.getFile().then(f => f.text()),
+            getFile: () => handle.getFile()   // raw File/Blob (used to render PDFs)
+          });
+        }
+      }
+      return nodes.sort(nodeCmp);
+    }
+
+    // Tree from a flat snapshot [{path, content}] (fallback path; cached in IndexedDB)
+    function treeFromSnapshot(files) {
+      const root = { type: 'dir', name: '', children: [] };
+      for (const f of files) {
+        const parts = f.path.split('/');
+        let cur = root;
+        for (let i = 0; i < parts.length - 1; i++) {
+          let next = cur.children.find(c => c.type === 'dir' && c.name === parts[i]);
+          if (!next) {
+            next = { type: 'dir', name: parts[i], path: parts.slice(0, i + 1).join('/'), children: [] };
+            cur.children.push(next);
+          }
+          cur = next;
+        }
+        cur.children.push({
+          type: 'file', name: parts[parts.length - 1], path: f.path,
+          // f.file = live File (lazy picker, read on click); f.content = cached text;
+          // f.blob = cached PDF blob; none = reopened-but-not-yet-cached.
+          read: f.file ? () => f.file.text()
+              : f.content != null ? () => Promise.resolve(f.content)
+              : () => Promise.reject(new Error('not cached yet — re-open this folder via 📂 to view it')),
+          getFile: f.file ? () => Promise.resolve(f.file) : undefined,
+          blob: f.blob
+        });
+      }
+      (function sortDeep(node) {
+        node.children.sort(nodeCmp);
+        node.children.forEach(c => { if (c.type === 'dir') sortDeep(c); });
+      })(root);
+      return root.children;
+    }
+
+    // Tree by fetching directory listings (?dir= loads). Understands Chromium's
+    // file:// index (addRow(...) calls) and plain <a href> listings (python http.server, nginx).
+    async function treeFromUrl(base, prefix) {
+      prefix = prefix || '';
+      const listingUrl = base + '/' + (prefix ? encPath(prefix) + '/' : '');
+      const resp = await fetch(listingUrl);
+      if (!resp.ok) throw new Error('HTTP ' + resp.status + ' for ' + listingUrl);
+      const entries = parseListing(await resp.text());
+      const nodes = [];
+      for (const ent of entries) {
+        if (!ent.name || ent.name.startsWith('.')) continue;
+        const childPath = prefix ? prefix + '/' + ent.name : ent.name;
+        if (ent.isDir) {
+          const children = await treeFromUrl(base, childPath);
+          if (children.length) nodes.push({ type: 'dir', name: ent.name, path: childPath, children });
+        } else if (isViewable(ent.name)) {
+          const u = base + '/' + encPath(childPath);
+          nodes.push({
+            type: 'file', name: ent.name, path: childPath, url: u,
+            read: () => fetch(u).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+          });
+        }
+      }
+      return nodes.sort(nodeCmp);
+    }
+
+    function parseListing(html) {
+      const out = [];
+      // Chromium file:// directory index: addRow("name","url-encoded",isdir,...)
+      const rowRe = /addRow\("((?:[^"\\]|\\.)*)","(?:[^"\\]|\\.)*",(0|1)\b/g;
+      let m, chromium = false;
+      while ((m = rowRe.exec(html))) {
+        chromium = true;
+        let name;
+        try { name = JSON.parse('"' + m[1] + '"'); } catch (e) { name = m[1]; }
+        if (name === '..' || name === '.') continue;
+        out.push({ name, isDir: m[2] === '1' });
+      }
+      if (chromium) return out;
+      // generic <a href> listing
+      const aRe = /<a\s+[^>]*href="([^"?#]+)"/gi;
+      while ((m = aRe.exec(html))) {
+        const href = m[1];
+        if (/^(?:[a-z]+:)?\/\//i.test(href) || href.startsWith('/') || href.startsWith('..')) continue;
+        const isDir = href.endsWith('/');
+        let name;
+        try { name = decodeURIComponent(isDir ? href.slice(0, -1) : href); } catch (e) { continue; }
+        if (!name || name.includes('/')) continue;
+        out.push({ name, isDir });
+      }
+      return out;
+    }
+
+    // Walk a dropped webkit FileSystemEntry tree, reading every viewable file into a snapshot.
+    // readEntries() returns batches of <=100, so it must be drained in a loop.
+    function readAllEntries(reader) {
+      return new Promise((resolve, reject) => {
+        const all = [];
+        (function next() {
+          reader.readEntries(batch => {
+            if (!batch.length) return resolve(all);
+            all.push(...batch);
+            next();
+          }, reject);
+        })();
+      });
+    }
+
+    async function snapshotFromEntry(rootEntry, onProgress) {
+      const files = [];
+      async function walkDir(dirEntry, prefix) {
+        const children = await readAllEntries(dirEntry.createReader());
+        for (const child of children) {
+          if (child.name.startsWith('.')) continue;
+          const childPath = prefix ? prefix + '/' + child.name : child.name;
+          if (child.isDirectory) {
+            await walkDir(child, childPath);
+          } else if (isViewable(child.name)) {
+            const f = await new Promise((res, rej) => child.file(res, rej));
+            files.push(isPdf(child.name) ? { path: childPath, blob: f } : { path: childPath, content: await f.text() });
+            if (onProgress) onProgress(files.length);
+          }
+        }
+      }
+      await walkDir(rootEntry, '');
+      return files;
+    }
+
+    function countFiles(nodes) {
+      return nodes.reduce((n, c) => n + (c.type === 'file' ? 1 : countFiles(c.children)), 0);
+    }
+
+    // read-through cache: when a file in a lazy picker tree is opened, store just that
+    // file's bytes under its Recent entry, so Recent fills in with what you've viewed.
+    async function cachePickerFile(recId, path, entry) {
+      if (!recId || !entry) return;
+      try {
+        const payload = (await idbGet(recId)) || { picker: true, paths: [], cache: {} };
+        payload.cache = payload.cache || {};
+        payload.cache[path] = entry;
+        await idbPut(recId, payload);
+      } catch (e) {}
+    }
+
+    function showTree(nodes, label, cached) {
+      currentTreeLazyPicker = false;
+      revokeBlobUrl();
+      currentTreeLabel = label;
+      treeLabelEl.textContent = label + (cached ? ' (cached)' : '');
+      treeEl.innerHTML = '';
+      activeFileEl = null;
+      activeNode = null;
+      filterInput.value = '';
+      buildWikiIndex(nodes);
+      if (!nodes.length) {
+        treeEl.innerHTML = '<div class="side-hint">No .md, .html, or .pdf files found in this folder.</div>';
+      } else {
+        renderTreeNodes(nodes, treeEl);
+      }
+      setSidebar(true);
+      updateRootRow();
+      pathEl.textContent = label + ' — ' + countFiles(nodes) + ' file(s)';
+      pathEl.draggable = false;
+      content.classList.remove('framed');
+      content.innerHTML = '<div class="hint"><p>Pick a file from the list on the left.</p></div>';
+      document.title = label + ' — SeaGull MD Viewer';
+      currentFile = null;
+      updateStar();
+    }
+
+    function setDragData(e, link) {
+      e.dataTransfer.setData('text/uri-list', link);
+      e.dataTransfer.setData('text/plain', link);
+      e.dataTransfer.effectAllowed = 'copy';
+    }
+
+    const toastEl = document.getElementById('toast');
+    let toastTimer = null;
+    function toast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4500);
+    }
+
+    // Drag-out without a known absolute path can only carry the bare name —
+    // point at the folder-location field instead of failing silently.
+    function nudgeRoot() {
+      toast('Drag-out links need this folder’s absolute path — fill in “folder location” above the file tree.');
+      rootInput.classList.add('attention');
+      setTimeout(() => rootInput.classList.remove('attention'), 2800);
+    }
+
+    function renderTreeNodes(nodes, container) {
+      for (const n of nodes) {
+        if (n.type === 'dir') {
+          const det = document.createElement('details');
+          det.className = 'folder';
+          det.open = false;   // collapsed by default; click to expand (filter auto-expands matches)
+          const sum = document.createElement('summary');
+          sum.textContent = n.name;
+          sum.title = n.name;
+          sum.draggable = true;
+          sum.addEventListener('dragstart', e => {
+            const u = fileUrl(n.path);
+            if (u) setDragData(e, viewerBase + '?dir=' + encodeURIComponent(u));
+            else { e.dataTransfer.setData('text/plain', n.name); nudgeRoot(); }
+          });
+          det.appendChild(sum);
+          const inner = document.createElement('div');
+          inner.className = 'indent';
+          renderTreeNodes(n.children, inner);
+          det.appendChild(inner);
+          container.appendChild(det);
+        } else {
+          const el = document.createElement('div');
+          el.className = 'file' + (isHtml(n.name) ? ' htmlfile' : isPdf(n.name) ? ' pdffile' : '');
+          el.textContent = n.name;
+          el.title = n.path;
+          el.dataset.path = n.path;
+          el.draggable = true;
+          el.addEventListener('dragstart', e => {
+            const u = n.url || fileUrl(n.path);
+            if (u) setDragData(e, viewerBase + '?file=' + encodeURIComponent(u));
+            else { e.dataTransfer.setData('text/plain', n.name); nudgeRoot(); }
+          });
+          el.onclick = () => openTreeFile(n, el);
+          container.appendChild(el);
+        }
+      }
+    }
+
+    async function openTreeFile(node, el) {
+      const u = node.url || fileUrl(node.path);
+      const label = (currentTreeLabel ? currentTreeLabel + '/' : '') + node.path;
+      try {
+        const html = isHtml(node.name), pdf = isPdf(node.name);
+        let text = null, blob = null;
+        if (pdf) {
+          const r = await pdfSrcFor(node, u);
+          blob = r.blob;
+          renderPdfFile(r.src, label, node.name);
+        } else if (html) {
+          // grab the source only when there's no URL, so a favorite can snapshot it
+          if (!u) text = await node.read();
+          await renderHtmlFile(node, u, label, text);
+        } else {
+          text = await node.read();
+          render(text, label, u);
+        }
+        currentFile = { path: node.path, url: u, text, html, pdf, blob };
+        if (activeFileEl) activeFileEl.classList.remove('active');
+        if (el) { el.classList.add('active'); activeFileEl = el; }  // el may be null (opened via wikilink)
+        activeNode = el ? { node, el } : null;
+        // read-through cache for lazy picker folders (store only what gets opened)
+        if (currentTreeLazyPicker && currentRecentId) {
+          const entry = pdf ? (blob ? { blob } : null) : (text != null ? { content: text } : null);
+          if (entry) cachePickerFile(currentRecentId, node.path, entry);
+        }
+        updateTopDrag();
+        updateStar();
+      } catch (e) {
+        showError('Could not read file', '<p><code>' + node.path + '</code> — ' + e.message + '</p>');
+      }
+    }
+
+    filterInput.addEventListener('input', () => {
+      const q = filterInput.value.trim().toLowerCase();
+      treeEl.querySelectorAll('.file').forEach(el => {
+        el.style.display = !q || el.dataset.path.toLowerCase().includes(q) ? '' : 'none';
+      });
+      treeEl.querySelectorAll('details').forEach(d => {
+        const anyVisible = [...d.querySelectorAll('.file')].some(f => f.style.display !== 'none');
+        d.style.display = anyVisible ? '' : 'none';
+        if (q) d.open = true;
+      });
+    });
+
+    /* ================= opening things ================= */
+
+    async function openDirHandle(handle) {
+      pathEl.textContent = 'reading ' + handle.name + '…';
+      const tree = await treeFromHandle(handle);
+      const rec = await addRecent({ type: 'dir', label: handle.name }, { handle });
+      currentRecentId = rec.id;
+      currentRootRaw = rec.root || '';
+      currentRoot = normalizeRoot(rec.root);
+      showTree(tree, handle.name, false);
+    }
+
+    async function openDirEntry(entry) {
+      pathEl.textContent = 'reading ' + entry.name + '…';
+      const files = await snapshotFromEntry(entry, n => { pathEl.textContent = 'reading ' + entry.name + '… ' + n + ' files'; });
+      const rec = await addRecent({ type: 'dir', label: entry.name }, { files });
+      currentRecentId = rec.id;
+      currentRootRaw = rec.root || '';
+      currentRoot = normalizeRoot(rec.root);
+      showTree(treeFromSnapshot(files), entry.name, false);
+    }
+
+    async function openFileHandle(handle) {
+      const file = await handle.getFile();
+      const html = isHtml(handle.name), pdf = isPdf(handle.name);
+      let text = null;
+      if (pdf) renderPdfFile(URL.createObjectURL(file), handle.name, handle.name);
+      else if (html) { text = await file.text(); await renderHtmlFile({ name: handle.name }, null, handle.name, text); }
+      else { text = await file.text(); render(text, handle.name); }
+      if (pdf) lastBlobUrl = content.querySelector('iframe')?.src || lastBlobUrl;
+      currentFile = { path: handle.name, url: null, text, html, pdf, blob: pdf ? file : null };
+      updateTopDrag(); updateStar();
+      await addRecent({ type: 'file', label: handle.name }, { handle });
+    }
+
+    async function openDroppedFile(f) {
+      const html = isHtml(f.name), pdf = isPdf(f.name);
+      let text = null;
+      if (pdf) renderPdfFile(URL.createObjectURL(f), f.name, f.name);
+      else if (html) { text = await f.text(); await renderHtmlFile({ name: f.name }, null, f.name, text); }
+      else { text = await f.text(); render(text, f.name); }
+      if (pdf) lastBlobUrl = content.querySelector('iframe')?.src || lastBlobUrl;
+      currentFile = { path: f.name, url: null, text, html, pdf, blob: pdf ? f : null };
+      updateTopDrag(); updateStar();
+      await addRecent({ type: 'file', label: f.name }, pdf ? { blob: f } : { content: text });
+    }
+
+    /* whole-window drag & drop (suppressed for drags that started inside this page) */
+    let internalDrag = false;
+    document.addEventListener('dragstart', () => { internalDrag = true; });
+    document.addEventListener('dragend', () => { internalDrag = false; });
+
+    let dragDepth = 0;
+    window.addEventListener('dragenter', e => {
+      e.preventDefault();
+      if (internalDrag) return;
+      dragDepth++;
+      overlay.classList.add('show');
+    });
+    window.addEventListener('dragleave', () => {
+      if (--dragDepth <= 0) { dragDepth = 0; overlay.classList.remove('show'); }
+    });
+    window.addEventListener('dragover', e => e.preventDefault());
+    window.addEventListener('drop', e => {
+      e.preventDefault();
+      dragDepth = 0;
+      overlay.classList.remove('show');
+      if (internalDrag) { internalDrag = false; return; }
+      const item = e.dataTransfer.items && e.dataTransfer.items[0];
+      if (!item) return;
+      // All three extractions must happen synchronously — the DataTransferItem
+      // is dead after the first await.
+      const handlePromise = item.getAsFileSystemHandle ? item.getAsFileSystemHandle() : null;
+      const entry = item.webkitGetAsEntry ? item.webkitGetAsEntry() : null;
+      const file = item.getAsFile ? item.getAsFile() : null;
+      handleDrop(handlePromise, entry, file).catch(err => showError('Could not open drop', '<p>' + err.message + '</p>'));
+    });
+
+    async function handleDrop(handlePromise, entry, file) {
+      if (handlePromise) {
+        try {
+          const h = await handlePromise;
+          if (h && h.kind === 'directory') return openDirHandle(h);
+          if (h && h.kind === 'file' && isViewable(h.name)) return openFileHandle(h);
+          if (h && h.kind === 'file') return showError('Unsupported file', '<p><code>' + h.name + '</code> isn\'t a .md, .html, or .pdf file.</p>');
+        } catch (e) { /* File System Access disabled (e.g. Brave default) — fall through */ }
+      }
+      if (entry && entry.isDirectory) return openDirEntry(entry);
+      if (file && isViewable(file.name)) return openDroppedFile(file);
+      showError('Nothing to open', '<p>Drop a folder, or a single <code>.md</code> / <code>.html</code> / <code>.pdf</code> file.</p>');
+    }
+
+    /* 📂 open-folder button: native picker when available, else webkitdirectory input */
+    const openBtn = document.getElementById('openbtn');
+    const dirInput = document.getElementById('dirinput');
+    openBtn.addEventListener('click', async () => {
+      if (window.showDirectoryPicker) {
+        try {
+          const h = await window.showDirectoryPicker();
+          await openDirHandle(h);
+        } catch (e) { /* user cancelled */ }
+      } else {
+        dirInput.click();
+      }
+    });
+    dirInput.addEventListener('change', async () => {
+      const files = [...dirInput.files].filter(f => isViewable(f.name));
+      dirInput.value = '';
+      if (!files.length) { showError('Nothing viewable found', '<p>That folder contains no <code>.md</code>, <code>.html</code>, or <code>.pdf</code> files.</p>'); return; }
+      const rootName = files[0].webkitRelativePath.split('/')[0];
+      // LAZY: build the tree from the live File objects (valid for this page session) —
+      // nothing is read until you click a file. Recent stores only the path list; a
+      // read-through cache fills in each file's bytes as you open it.
+      const items = files.map(f => ({ path: f.webkitRelativePath.split('/').slice(1).join('/'), file: f }));
+      const rec = await addRecent({ type: 'dir', label: rootName },
+        { picker: true, paths: items.map(it => ({ path: it.path })), cache: {} });
+      currentRecentId = rec.id;
+      currentRootRaw = rec.root || '';
+      currentRoot = normalizeRoot(rec.root);
+      showTree(treeFromSnapshot(items), rootName, false);
+      currentTreeLazyPicker = true;   // enable read-through caching for this session
+    });
+
+    /* ================= sidebar toggle + resize ================= */
+
+    function setSidebar(show) {
+      document.body.classList.toggle('no-sidebar', !show);
+    }
+    function setFullPage(on) {
+      document.body.classList.toggle('full-page', on);
+    }
+    document.getElementById('fullpagebtn').addEventListener('click', () => setFullPage(true));
+    document.getElementById('exitfull').addEventListener('click', () => setFullPage(false));
+    document.getElementById('clearrecents').addEventListener('click', () => {
+      if (!confirm('Clear the recent list?')) return;
+      idbClear().catch(() => {});  // wipe the whole payload store, including any past orphans
+      saveRecents([]);
+      renderRecents();
+    });
+
+    const resizer = document.getElementById('resizer');
+    resizer.addEventListener('mousedown', e => {
+      e.preventDefault();
+      const startX = e.clientX, startW = sidebar.offsetWidth;
+      document.body.classList.add('resizing');
+      function move(ev) {
+        sidebar.style.width = Math.min(640, Math.max(170, startW + ev.clientX - startX)) + 'px';
+      }
+      function up() {
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+        document.body.classList.remove('resizing');
+        lsSet('mdviewer.sidewidth', sidebar.offsetWidth);
+      }
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+    });
+    resizer.addEventListener('dblclick', () => {
+      sidebar.style.width = '290px';
+      lsSet('mdviewer.sidewidth', 290);
+    });
+
+    /* ================= help modal ================= */
+
+    const helpModal = document.getElementById('helpmodal');
+    document.getElementById('helpbtn').addEventListener('click', () => helpModal.classList.add('show'));
+    document.getElementById('helpclose').addEventListener('click', () => helpModal.classList.remove('show'));
+    helpModal.addEventListener('click', e => { if (e.target === helpModal) helpModal.classList.remove('show'); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (document.body.classList.contains('full-page')) setFullPage(false);
+        helpModal.classList.remove('show');
+      }
+    });
+
+    /* ================= rendering ================= */
+
+    // baseUrl (the file's own URL), when known, resolves relative image paths to real files
+    // marked v12 no longer emits heading ids, so in-page TOC / anchor links
+    // (e.g. [Community](#community)) have nothing to scroll to. Re-create them
+    // with GitHub-compatible slugs, including GitHub's duplicate suffix scheme.
+    function slugify(text) {
+      return text.toLowerCase().trim()
+        .replace(/[^\p{L}\p{N}\s_-]/gu, '')   // drop punctuation/emoji, keep letters/digits/_/-
+        .replace(/\s+/g, '-');
+    }
+    function addHeadingIds(root) {
+      const seen = Object.create(null);
+      root.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(h => {
+        if (h.id) return;
+        const base = slugify(h.textContent || '');
+        if (!base) return;
+        let id = base, n = 1;
+        while (seen[id]) id = base + '-' + (n++);
+        seen[id] = true;
+        h.id = id;
+      });
+    }
+    // a hash in the viewer URL (e.g. ?file=…#community) only scrolls if its target
+    // already existed at load; content renders later, so re-apply it afterwards.
+    function scrollToHash() {
+      if (location.hash.length < 2) return;
+      const raw = decodeURIComponent(location.hash.slice(1));
+      const el = document.getElementById(raw) || document.getElementById(slugify(raw));
+      if (el) el.scrollIntoView();
+    }
+
+    // YAML frontmatter → a compact properties table (parsed as flat key: value,
+    // with block "- item" lists folded into a comma list).
+    function renderFrontmatter(yaml) {
+      const rows = [], lines = yaml.split(/\r?\n/);
+      for (let i = 0; i < lines.length; i++) {
+        const m = /^([^:\s][^:]*):\s*(.*)$/.exec(lines[i]);
+        if (!m) continue;
+        let key = m[1].trim(), val = m[2].trim();
+        if (!val) {
+          const items = [];
+          while (i + 1 < lines.length && /^\s*-\s+/.test(lines[i + 1])) items.push(lines[++i].replace(/^\s*-\s+/, '').trim());
+          val = items.join(', ');
+        }
+        val = val.replace(/^["'](.*)["']$/, '$1').replace(/^\[(.*)\]$/, '$1');
+        rows.push('<tr><th>' + escHtml(key) + '</th><td>' + escHtml(val) + '</td></tr>');
+      }
+      return rows.length ? '<table class="frontmatter">' + rows.join('') + '</table>' : '';
+    }
+
+    // [^id] footnotes: pull definitions out, number refs by first appearance, and
+    // build a footnotes section with back-links. (marked has no footnote support.)
+    function processFootnotes(md) {
+      const defs = Object.create(null);
+      md = md.replace(/^\[\^([^\]]+)\]:[ \t]*(.*)$/gm, (_, id, text) => { defs[id] = text; return ''; });
+      const order = [], num = Object.create(null);
+      md = md.replace(/\[\^([^\]\s]+)\]/g, (m, id) => {
+        if (!(id in defs)) return m;
+        if (!(id in num)) { order.push(id); num[id] = order.length; }
+        return '<sup class="fnref" id="fnref-' + id + '"><a href="#fn-' + id + '">' + num[id] + '</a></sup>';
+      });
+      if (!order.length) return { md, footnotesHtml: '' };
+      const items = order.map(id => '<li id="fn-' + id + '">' + marked.parseInline(defs[id]) +
+        ' <a href="#fnref-' + id + '" class="fnback" title="back to text">↩</a></li>').join('');
+      return { md, footnotesHtml: '<section class="footnotes"><hr><ol>' + items + '</ol></section>' };
+    }
+
+    // Obsidian custom task states - [/] [-] [>] … (GFM already handles [ ] and [x]).
+    const CHECK_STATES = { '/': 'partial', '-': 'cancelled', '>': 'forwarded', '<': 'scheduled',
+                           '?': 'question', '!': 'important', '*': 'star' };
+    function decorateCustomCheckboxes(root) {
+      root.querySelectorAll('li').forEach(li => {
+        if (li.querySelector(':scope > input')) return;
+        const first = li.firstChild;
+        if (!first || first.nodeType !== 3) return;
+        const m = /^\[(.)\]\s+/.exec(first.nodeValue);
+        if (!m) return;
+        const ch = m[1];
+        if (ch === ' ' || ch === 'x' || ch === 'X') return;
+        const state = CHECK_STATES[ch] || 'other';
+        li.classList.add('task-list-item', 'custom-task', 'task-' + state);
+        first.nodeValue = first.nodeValue.slice(m[0].length);
+        const box = document.createElement('span');
+        box.className = 'cb cb-' + state;
+        box.textContent = ch;
+        li.insertBefore(box, first);
+      });
+    }
+
+    // ![[image]] embeds resolve against the folder location (vault root); if unknown,
+    // show the name. (Obsidian's basename-search across the vault isn't replicated.)
+    function resolveWikiEmbeds(root) {
+      root.querySelectorAll('img.wikiembed').forEach(img => {
+        const target = img.getAttribute('data-target') || '';
+        if (currentRoot) img.src = currentRoot + '/' + encPath(target);
+        else img.replaceWith(document.createTextNode('🖼 ' + target));
+      });
+    }
+
+    // wikilink resolution index, (re)built whenever a tree loads
+    let wikiIndex = null;
+    function buildWikiIndex(nodes) {
+      const map = Object.create(null);
+      (function walk(ns) {
+        for (const n of ns) {
+          if (n.type === 'dir') walk(n.children);
+          else {
+            const noext = n.path.replace(/\.[^/.]+$/, '').toLowerCase();
+            map[noext] = n;
+            const base = noext.split('/').pop();
+            if (!(base in map)) map[base] = n;   // basename = Obsidian "shortest path" fallback
+          }
+        }
+      })(nodes);
+      wikiIndex = map;
+    }
+    function resolveWiki(target) {
+      if (!wikiIndex || !target) return null;
+      const key = target.replace(/\.[^/.]+$/, '').toLowerCase();
+      return wikiIndex[key] || wikiIndex[key.split('/').pop()] || null;
+    }
+
+    // Clicks: wikilinks open the target note (+ optional heading); plain #anchors
+    // resolve by literal id then slug-normalized form (TOC links vary in convention).
+    content.addEventListener('click', e => {
+      const w = e.target.closest('a.wikilink');
+      if (w) {
+        e.preventDefault();
+        const node = resolveWiki(w.dataset.target);
+        if (!node) { toast('Note not found: ' + (w.dataset.target || w.textContent)); return; }
+        const el = [...treeEl.querySelectorAll('.file')].find(f => f.dataset.path === node.path) || null;
+        Promise.resolve(openTreeFile(node, el)).then(() => {
+          const h = w.dataset.heading;
+          if (h) { const t = document.getElementById(h) || document.getElementById(slugify(h)); if (t) t.scrollIntoView(); }
+        });
+        return;
+      }
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const raw = a.getAttribute('href').slice(1);
+      if (!raw) return;
+      let frag; try { frag = decodeURIComponent(raw); } catch (err) { frag = raw; }
+      const el = document.getElementById(frag) || document.getElementById(slugify(frag));
+      if (el) { e.preventDefault(); el.scrollIntoView(); }
+    });
+
+    function render(md, sourceLabel, baseUrl) {
+      try {
+        revokeBlobUrl();
+        content.classList.remove('framed');
+        let fmHtml = '';
+        const fm = /^﻿?---\r?\n([\s\S]*?)\r?\n---\r?\n/.exec(md);
+        if (fm) { fmHtml = renderFrontmatter(fm[1]); md = md.slice(fm[0].length); }
+        const fn = processFootnotes(md);
+        content.innerHTML = fmHtml + marked.parse(fn.md) + fn.footnotesHtml;
+        addHeadingIds(content);
+        decorateCustomCheckboxes(content);
+        resolveWikiEmbeds(content);
+        if (baseUrl) {
+          content.querySelectorAll('img').forEach(img => {
+            const src = img.getAttribute('src');
+            if (src && !/^([a-z]+:|\/)/i.test(src)) {
+              try { img.src = new URL(src, baseUrl).href; } catch (e) {}
+            }
+          });
+        }
+        pathEl.textContent = sourceLabel;
+        document.title = sourceLabel.split('/').pop() + ' — SeaGull MD Viewer';
+        scrollToHash();
+      } catch (e) {
+        showError('Parse error', e.message);
+      }
+    }
+
+    // HTML files render in a sandboxed iframe (scripts off). With a real URL the frame
+    // loads the file directly so images/CSS work; otherwise it gets the cached text.
+    async function renderHtmlFile(node, u, label, preText) {
+      revokeBlobUrl();
+      content.classList.add('framed');
+      content.innerHTML = '';
+      const frame = document.createElement('iframe');
+      frame.setAttribute('sandbox', '');
+      if (u) frame.src = u;
+      else frame.srcdoc = preText != null ? preText : await node.read();
+      content.appendChild(frame);
+      pathEl.textContent = label;
+      document.title = label.split('/').pop() + ' — SeaGull MD Viewer';
+    }
+
+    // PDFs render in the browser's BUILT-IN viewer via an <iframe> src — no parser,
+    // no library. `src` is a real URL (?dir=/?file=/folder-location) or a blob: URL
+    // made from the file's bytes (dropped file / FS-handle / cached snapshot).
+    let lastBlobUrl = null;
+    function revokeBlobUrl() { if (lastBlobUrl) { try { URL.revokeObjectURL(lastBlobUrl); } catch (e) {} lastBlobUrl = null; } }
+    function renderPdfFile(src, label, name) {
+      revokeBlobUrl();
+      if (!src) {
+        content.classList.remove('framed');
+        showError('Can’t preview this PDF',
+          '<p><code>' + escHtml(name || label) + '</code> — to view it, set the <strong>folder location</strong>, load it over the server / <code>?file=</code>, or drop the PDF on its own. ' +
+          'PDFs use the browser’s built-in viewer, which needs a real or in-memory URL.</p>');
+        return;
+      }
+      content.classList.add('framed');
+      content.innerHTML = '';
+      const frame = document.createElement('iframe');
+      frame.src = src;
+      content.appendChild(frame);
+      if (src.startsWith('blob:')) lastBlobUrl = src;
+      pathEl.textContent = label;
+      document.title = (name || label).split('/').pop() + ' — SeaGull MD Viewer';
+    }
+
+    // resolve a PDF node to an iframe src (real URL, then FS-handle, then cached blob)
+    async function pdfSrcFor(node, u) {
+      if (u) return { src: u, blob: null };
+      if (node.getFile) { const b = await node.getFile(); return { src: URL.createObjectURL(b), blob: b }; }
+      if (node.blob) return { src: URL.createObjectURL(node.blob), blob: node.blob };
+      return { src: null, blob: null };
+    }
+
+    function updateTopDrag() {
+      if (currentFile && currentFile.url) {
+        pathEl.draggable = true;
+        pathEl.title = 'Drag to another browser window to open this file there';
+      } else {
+        pathEl.draggable = false;
+        pathEl.title = '';
+      }
+    }
+    pathEl.addEventListener('dragstart', e => {
+      if (currentFile && currentFile.url) setDragData(e, viewerBase + '?file=' + encodeURIComponent(currentFile.url));
+    });
+
+    function showError(title, body) {
+      content.classList.remove('framed');
+      content.innerHTML = '<div class="error"><h3>' + title + '</h3>' + body + '</div>';
+    }
+
+    function showHint() {
+      content.innerHTML = `
+        <div class="hint">
+          <p>No file loaded. You can:</p>
+          <p>📁 Drop a <strong>folder</strong> of .md/.html files anywhere on this window — it becomes a browsable tree in the sidebar.<br>
+             📄 Drop a single file to render it.<br>
+             🕘 Reopen anything from <strong>Recent</strong> in the sidebar.</p>
+          <p>Or paste a URL or path (end with <code>/</code> to load as a folder):</p>
+          <form class="url-form" id="urlform" onsubmit="return loadFromInput(event)">
+            <input type="text" id="urlinput" placeholder="file:///Users/.../file.md  or  /Users/.../recipes/  or  https://…" autofocus />
+            <button type="submit">Load</button>
+          </form>
+          <p style="margin-top:28px; font-size:0.8em">Tips: <code>?file=&lt;path&gt;</code> and <code>?dir=&lt;path&gt;</code> query params also work — see ❓ help for everything else.</p>
+        </div>
+      `;
+    }
+
+    function loadFromInput(event) {
+      event.preventDefault();
+      const raw = document.getElementById('urlinput').value.trim();
+      if (!raw) return false;
+      const asDir = raw.endsWith('/');
+      const cleaned = raw.replace(/\/+$/, '');
+      // Normalize: bare path → file://; otherwise keep as-is
+      const target = (cleaned.startsWith('file:') || cleaned.startsWith('http://') || cleaned.startsWith('https://'))
+        ? cleaned
+        : 'file://' + cleaned;
+      // Reload with ?file=/?dir= so the existing render pipeline handles it (incl. error states)
+      window.location.search = (asDir ? '?dir=' : '?file=') + encodeURIComponent(target);
+      return false;
+    }
+
+    function shortLabel(p) {
+      const parts = p.replace(/\/+$/, '').split('/').filter(Boolean);
+      return parts.length > 2 ? parts.slice(-2).join('/') : p;
+    }
+
+    function fetchHelp(what) {
+      return `<p>If this is a <code>file://</code> URL, browsers block cross-origin <code>fetch()</code> by default. Two fixes:</p>
+        <ol>
+          <li><strong>Launch Brave/Chrome with the flag:</strong>
+            <pre><code>open -na "Brave Browser" --args --allow-file-access-from-files</code></pre>
+            Then reopen this page in that window.</li>
+          <li><strong>Or run a tiny local HTTP server from your home dir</strong>, then use <code>http://localhost:8000/...</code> URLs:
+            <pre><code>cd ~ &amp;&amp; python3 -m http.server 8000</code></pre></li>
+        </ol>
+        <p>Or just drop the ${what} anywhere on this window — no fetch needed.</p>`;
+    }
+
+    /* ================= theme + reading font ================= */
+
+    const THEMES = ['midnight', 'paper', 'dark', 'sepia'];
+    const themeSel = document.getElementById('themesel');
+    function applyTheme(t) {
+      if (!THEMES.includes(t)) t = 'midnight';
+      document.documentElement.dataset.theme = t;
+      themeSel.value = t;
+      lsSet('mdviewer.theme', t);
+    }
+    themeSel.addEventListener('change', () => applyTheme(themeSel.value));
+
+    const FONTS = ['system', 'serif', 'book', 'verdana', 'mono'];
+    const fontSel = document.getElementById('fontsel');
+    function applyFont(f) {
+      if (!FONTS.includes(f)) f = 'system';
+      document.documentElement.dataset.font = f;
+      fontSel.value = f;
+      lsSet('mdviewer.font', f);
+    }
+    fontSel.addEventListener('change', () => applyFont(fontSel.value));
+
+    /* ================= init ================= */
+
+    applyTheme(lsGet('mdviewer.theme') || 'midnight');
+    applyFont(lsGet('mdviewer.font') || 'system');
+    setSidebar(true);
+    const savedWidth = parseInt(lsGet('mdviewer.sidewidth'), 10);
+    if (savedWidth) sidebar.style.width = Math.min(640, Math.max(170, savedWidth)) + 'px';
+    renderRecents();
+    renderFavorites();
+    updateStar();
+
+    if (dirParam) {
+      const base = normalizeRoot(dirParam);
+      if (!base) {
+        showError('Bad dir parameter', '<p><code>' + dirParam + '</code> — expected an absolute path or a file://, http:// or https:// URL.</p>');
+      } else {
+        pathEl.textContent = 'reading ' + dirParam + '…';
+        treeFromUrl(base, '')
+          .then(async tree => {
+            const rec = await addRecent({ type: 'dir', label: shortLabel(dirParam), url: dirParam });
+            currentRecentId = rec.id;
+            currentRootRaw = dirParam;
+            currentRoot = base;
+            showTree(tree, shortLabel(dirParam), false);
+          })
+          .catch(err => showError('Could not list folder', '<p><code>' + dirParam + '</code> — ' + err.message + '</p>' + fetchHelp('folder')));
+      }
+    } else if (fileParam) {
+      const url = fileParam.startsWith('file:') || fileParam.startsWith('http') ? fileParam : 'file://' + fileParam;
+      if (isPdf(fileParam)) {
+        // PDFs load straight into the browser's built-in viewer via the iframe src
+        renderPdfFile(url, fileParam, fileParam);
+        currentFile = { path: fileParam, url, pdf: true, blob: null };
+        updateTopDrag();
+        updateStar();
+        addRecent({ type: 'url', label: shortLabel(fileParam), url: fileParam });
+      } else if (isHtml(fileParam)) {
+        // iframes load file:// from a file:// page without the fetch flag
+        renderHtmlFile(null, url, fileParam);
+        currentFile = { path: fileParam, url, text: null, html: true };
+        updateTopDrag();
+        updateStar();
+        addRecent({ type: 'url', label: shortLabel(fileParam), url: fileParam });
+      } else {
+        fetch(url)
+          .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+          .then(md => {
+            render(md, fileParam, url);
+            currentFile = { path: fileParam, url, text: md, html: false };
+            updateTopDrag();
+            updateStar();
+            addRecent({ type: 'url', label: shortLabel(fileParam), url: fileParam });
+          })
+          .catch(err => showError('Could not load file', '<p><code>' + fileParam + '</code> — ' + err.message + '</p>' + fetchHelp('.md file')));
+      }
+    } else {
+      showHint();
+    }
+  </script>
+</body>
+</html>

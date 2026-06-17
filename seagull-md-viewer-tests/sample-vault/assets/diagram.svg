@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="160" viewBox="0 0 420 160" font-family="-apple-system, Segoe UI, sans-serif">
+  <rect width="420" height="160" rx="10" fill="#0d1b2a"/>
+  <text x="20" y="34" fill="#7dd3fc" font-size="15" font-weight="700">🐦 relative image — it works!</text>
+  <rect x="20"  y="60" width="110" height="56" rx="8" fill="#1b2a3a" stroke="#4cc9f0"/>
+  <text x="75" y="93" fill="#e2e8f0" font-size="13" text-anchor="middle">folder</text>
+  <rect x="160" y="60" width="110" height="56" rx="8" fill="#1b2a3a" stroke="#4cc9f0"/>
+  <text x="215" y="93" fill="#e2e8f0" font-size="13" text-anchor="middle">location</text>
+  <rect x="300" y="60" width="110" height="56" rx="8" fill="#1b2a3a" stroke="#4ade80"/>
+  <text x="355" y="93" fill="#4ade80" font-size="13" text-anchor="middle">image ✓</text>
+  <path d="M130 88 H160" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M270 88 H300" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0 0 L6 3 L0 6 Z" fill="#94a3b8"/>
+  </marker></defs>
+  <text x="20" y="145" fill="#94a3b8" font-size="11">Resolved against the folder's absolute path (set it, or load via ?dir=).</text>
+</svg>
