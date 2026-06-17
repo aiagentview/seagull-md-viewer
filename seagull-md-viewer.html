@@ -1470,14 +1470,33 @@
         updateStar();
       } catch (e) {
         if (e.message && e.message.startsWith('not cached yet')) {
-          const folderHint = currentRootRaw
-            ? '<code>' + escHtml(currentRootRaw) + '</code>'
-            : currentTreeLabel ? '<strong>' + escHtml(currentTreeLabel) + '</strong>' : 'this folder';
-          showError('Could not read file',
-            '<p><code>' + escHtml(node.path) + '</code> — not cached yet.</p>' +
-            '<p>Browser file access expired. Re-open ' + folderHint + ' to restore access:</p>' +
-            '<p><button onclick="document.getElementById(\'openbtn\').click()" ' +
-            'style="cursor:pointer;padding:6px 14px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-size:0.9em">📂 Re-open folder</button></p>');
+          // Try to auto-restore via stored FileSystemDirectoryHandle (Chrome/Edge only)
+          let restored = false;
+          if (currentRecentId) {
+            try {
+              const payload = await idbGet(currentRecentId);
+              if (payload && payload.handle) {
+                const perm = await payload.handle.queryPermission({ mode: 'read' });
+                const granted = perm === 'granted' || (await payload.handle.requestPermission({ mode: 'read' })) === 'granted';
+                if (granted) {
+                  const tree = await treeFromHandle(payload.handle);
+                  showTree(tree, payload.handle.name, false);
+                  await openTreeFile(node, el);
+                  restored = true;
+                }
+              }
+            } catch (_) {}
+          }
+          if (!restored) {
+            const folderHint = currentRootRaw
+              ? '<code>' + escHtml(currentRootRaw) + '</code>'
+              : currentTreeLabel ? '<strong>' + escHtml(currentTreeLabel) + '</strong>' : 'this folder';
+            showError('Could not read file',
+              '<p><code>' + escHtml(node.path) + '</code> — not cached yet.</p>' +
+              '<p>Browser file access expired. Re-open ' + folderHint + ' to restore access:</p>' +
+              '<p><button onclick="document.getElementById(\'openbtn\').click()" ' +
+              'style="cursor:pointer;padding:6px 14px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-size:0.9em">📂 Re-open folder</button></p>');
+          }
         } else {
           showError('Could not read file', '<p><code>' + escHtml(node.path) + '</code> — ' + escHtml(e.message) + '</p>');
         }
