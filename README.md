@@ -37,9 +37,24 @@ do all at once.
 
 ## Usage
 
-There are two ways to run it. Most of the time, the first is all you need.
+There are three ways to use it. Most of the time, the first is all you need.
 
-### 1. Just open it (zero setup)
+### 0. Use it online — no install, no download
+
+Just bookmark this URL in any browser:
+
+**https://aiagentview.github.io/seagull-md-viewer/seagull-md-viewer.html**
+
+Open it, use the **📂 Open Folder** button to load a folder of `.md` files as a
+browsable vault, or drag a single file onto the window to render it. That's it.
+
+> **Privacy note:** Everything runs entirely in your browser. Your files are never
+> uploaded anywhere — the hosted URL only serves the viewer itself. The "Upload files
+> to this site?" prompt you may see is a **browser dialog** (not the viewer) asking
+> permission to restore access to a folder you previously opened. No data leaves your
+> machine.
+
+### 1. Just open it locally (zero setup)
 
 Open `seagull-md-viewer.html` in a browser and **drag a folder onto the window**:
 
