@@ -873,6 +873,7 @@
     let currentFile = null;       // {path, url} of the rendered file — powers top-bar drag-out
     let activeFileEl = null;
     let activeNode = null;
+    let pendingFileNode = null;  // file to auto-open after folder access is restored
 
     /* ================= storage: localStorage (recent list) + IndexedDB (payloads) ================= */
 
@@ -1470,17 +1471,19 @@
         updateStar();
       } catch (e) {
         if (e.message && e.message.startsWith('not cached yet')) {
-          // Try to auto-restore via stored FileSystemDirectoryHandle (Chrome/Edge only)
+          // 1. Try to restore silently via stored handle (Chrome/Edge: requestPermission = simple prompt, no picker)
           let restored = false;
+          let storedHandle = null;
           if (currentRecentId) {
             try {
               const payload = await idbGet(currentRecentId);
               if (payload && payload.handle) {
-                const perm = await payload.handle.queryPermission({ mode: 'read' });
-                const granted = perm === 'granted' || (await payload.handle.requestPermission({ mode: 'read' })) === 'granted';
+                storedHandle = payload.handle;
+                const perm = await storedHandle.queryPermission({ mode: 'read' });
+                const granted = perm === 'granted' || (await storedHandle.requestPermission({ mode: 'read' })) === 'granted';
                 if (granted) {
-                  const tree = await treeFromHandle(payload.handle);
-                  showTree(tree, payload.handle.name, false);
+                  const tree = await treeFromHandle(storedHandle);
+                  showTree(tree, storedHandle.name, false);
                   await openTreeFile(node, el);
                   restored = true;
                 }
@@ -1488,20 +1491,46 @@
             } catch (_) {}
           }
           if (!restored) {
-            const folderHint = currentRootRaw
-              ? '<code>' + escHtml(currentRootRaw) + '</code>'
-              : currentTreeLabel ? '<strong>' + escHtml(currentTreeLabel) + '</strong>' : 'this folder';
-            showError('Could not read file',
-              '<p><code>' + escHtml(node.path) + '</code> — not cached yet.</p>' +
-              '<p>Browser file access expired. Re-open ' + folderHint + ' to restore access:</p>' +
-              '<p><button onclick="document.getElementById(\'openbtn\').click()" ' +
-              'style="cursor:pointer;padding:6px 14px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-size:0.9em">📂 Re-open folder</button></p>');
+            // Store pending file so it auto-opens after the folder is re-picked
+            pendingFileNode = { node, el };
+            const folderName = currentTreeLabel || (currentRootRaw ? currentRootRaw.split('/').pop() : null);
+            const folderPath = currentRootRaw || null;
+            // If we have a handle, button re-requests permission (no picker needed)
+            // If no handle (Brave/Safari), button opens the picker and shows the path so user knows where to go
+            const btnLabel = storedHandle ? '🔓 Restore access to ' + escHtml(folderName || 'folder') : '📂 Re-open folder';
+            const btnAction = storedHandle
+              ? '_restoreFolderAccess()'
+              : 'document.getElementById(\'openbtn\').click()';
+            const pathNote = (!storedHandle && folderPath)
+              ? '<p style="font-size:0.85em;opacity:0.7">Navigate to: <code>' + escHtml(folderPath) + '</code></p>'
+              : '';
+            showError('File access expired',
+              '<p><code>' + escHtml(node.path) + '</code> was not cached in this session.</p>' +
+              '<p>Browser file access to <strong>' + escHtml(folderName || 'this folder') + '</strong> has expired.</p>' +
+              pathNote +
+              '<p><button onclick="' + btnAction + '" ' +
+              'style="cursor:pointer;padding:6px 14px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-size:0.9em">' + btnLabel + '</button></p>');
           }
         } else {
           showError('Could not read file', '<p><code>' + escHtml(node.path) + '</code> — ' + escHtml(e.message) + '</p>');
         }
       }
     }
+
+    // Called by the "Restore access" button when a stored handle is available
+    window._restoreFolderAccess = async function() {
+      if (!currentRecentId) return;
+      try {
+        const payload = await idbGet(currentRecentId);
+        if (!payload || !payload.handle) return;
+        const granted = (await payload.handle.requestPermission({ mode: 'read' })) === 'granted';
+        if (granted) {
+          const tree = await treeFromHandle(payload.handle);
+          showTree(tree, payload.handle.name, false);
+          if (pendingFileNode) { await openTreeFile(pendingFileNode.node, pendingFileNode.el); pendingFileNode = null; }
+        }
+      } catch (_) {}
+    };
 
     filterInput.addEventListener('input', () => {
       const q = filterInput.value.trim().toLowerCase();
@@ -1525,6 +1554,7 @@
       currentRootRaw = rec.root || '';
       currentRoot = normalizeRoot(rec.root);
       showTree(tree, handle.name, false);
+      if (pendingFileNode) { await openTreeFile(pendingFileNode.node, pendingFileNode.el); pendingFileNode = null; }
     }
 
     async function openDirEntry(entry) {
