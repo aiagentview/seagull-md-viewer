@@ -1467,6 +1467,14 @@
           const entry = pdf ? (blob ? { blob } : null) : (text != null ? { content: text } : null);
           if (entry) cachePickerFile(currentRecentId, node.path, entry);
         }
+        // update the address bar so the current file is always copy-pasteable as a ?file= URL
+        // only when the file URL is known (http/https tree); skipped for dropped/picked folders
+        if (u && (u.startsWith('http://') || u.startsWith('https://'))) {
+          try {
+            const sp = new URLSearchParams({ file: u });
+            history.replaceState(null, '', '?' + sp.toString());
+          } catch (e) {}
+        }
         updateTopDrag();
         updateStar();
       } catch (e) {
