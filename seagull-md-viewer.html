@@ -333,6 +333,43 @@
     .iconbtn:hover { filter: brightness(1.25); }
     #starbtn.starred { color: #f5c518; }
     #starbtn.disabled { opacity: 0.4; }
+    /* ---------- mobile sidebar toggle (☰) ---------- */
+    #menubtn {
+      display: none; cursor: pointer;
+      align-items: center; justify-content: center;
+      width: 34px; height: 34px; margin-right: auto;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--panel); color: var(--text);
+      font-size: 1.1em; line-height: 1;
+    }
+    #menubtn:hover { border-color: var(--accent); }
+    #sidebar-backdrop { display: none; }
+    /* ---------- narrow screens: sidebar becomes a slide-in overlay ---------- */
+    @media (max-width: 720px) {
+      #sidebar {
+        position: fixed; top: 0; left: 0;
+        height: 100vh; height: 100dvh;
+        width: 86%; max-width: 320px; z-index: 60;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease;
+        box-shadow: 2px 0 18px rgba(0, 0, 0, 0.5);
+      }
+      body.sidebar-open #sidebar { transform: translateX(0); }
+      /* keep the overlay reachable even if the desktop "no-sidebar" class is set */
+      body.no-sidebar #sidebar { display: flex; }
+      #resizer { display: none; }
+      #sidebar-backdrop {
+        position: fixed; inset: 0; z-index: 55;
+        background: rgba(0, 0, 0, 0.45);
+      }
+      body.sidebar-open #sidebar-backdrop { display: block; }
+      #menubtn { display: inline-flex; }
+      main { padding: 14px; }
+      .container { max-width: 100%; }
+      #content { padding: 18px 15px; }
+      .topbar { margin-bottom: 16px; gap: 10px; }
+      .actions a { margin-left: 12px; }
+    }
     /* full-page reading mode: only the content remains */
     body.full-page #sidebar,
     body.full-page #resizer,
@@ -610,6 +647,7 @@
     <main>
       <div class="container">
         <div class="topbar">
+          <button id="menubtn" title="Show / hide the file list" aria-label="Toggle file list">☰</button>
           <div class="path" id="filepath">no file loaded</div>
           <div class="actions">
             <select id="themesel" class="theme-select" title="Color scheme">
@@ -634,6 +672,7 @@
         <div id="content"></div>
       </div>
     </main>
+    <div id="sidebar-backdrop"></div>
   </div>
 
   <div id="dropoverlay">Drop a folder or .md / .html / .pdf file</div>
@@ -1475,6 +1514,7 @@
             history.replaceState(null, '', '?' + sp.toString());
           } catch (e) {}
         }
+        document.body.classList.remove('sidebar-open');   // close the mobile sidebar overlay after opening a file
         updateTopDrag();
         updateStar();
       } catch (e) {
@@ -1686,6 +1726,10 @@
     }
     document.getElementById('fullpagebtn').addEventListener('click', () => setFullPage(true));
     document.getElementById('exitfull').addEventListener('click', () => setFullPage(false));
+    // mobile: the sidebar collapses into a slide-in overlay (see the max-width media query)
+    function setSidebarOverlay(open) { document.body.classList.toggle('sidebar-open', open); }
+    document.getElementById('menubtn').addEventListener('click', () => setSidebarOverlay(!document.body.classList.contains('sidebar-open')));
+    document.getElementById('sidebar-backdrop').addEventListener('click', () => setSidebarOverlay(false));
     document.getElementById('clearrecents').addEventListener('click', () => {
       if (!confirm('Clear the recent list?')) return;
       idbClear().catch(() => {});  // wipe the whole payload store, including any past orphans
@@ -1724,6 +1768,7 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
         if (document.body.classList.contains('full-page')) setFullPage(false);
+        document.body.classList.remove('sidebar-open');
         helpModal.classList.remove('show');
       }
     });
